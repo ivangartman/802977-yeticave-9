@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Иван Гартман](https://up.htmlacademy.ru/php/9/user/802977).
-* Наставник: `Неизвестно`.
+* Наставник: [Роман Кунин](https://htmlacademy.ru/profile/id497465).
 
 ---
 

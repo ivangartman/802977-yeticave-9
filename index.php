@@ -48,14 +48,12 @@ function price_format (float $price): string
 
     return $price;
 }
-$page_content = include_template('index.php',
-    [
+$page_content = include_template('index.php', [
         'categories' => $categories,
         'lots' => $lots
     ]
 );
-$layout_content = include_template('layout.php',
-    [
+$layout_content = include_template('layout.php', [
         'is_auth' => $is_auth,
         'user_name' => $user_name,
         'title' => 'YetiCave - Главная страница',
@@ -63,4 +61,4 @@ $layout_content = include_template('layout.php',
         'categories' => $categories
     ]
 );
-print($layout_content);
+echo $layout_content;

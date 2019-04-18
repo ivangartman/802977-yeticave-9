@@ -1,4 +1,5 @@
 <?php
+
 require_once 'helpers.php';
 $is_auth = rand(0, 1);
 $user_name = 'Иван'; // укажите здесь ваше имя
@@ -49,16 +50,14 @@ function price_format (float $price): string
     return $price;
 }
 $page_content = include_template('index.php', [
-        'categories' => $categories,
-        'lots' => $lots
-    ]
-);
+    'categories' => $categories,
+    'lots' => $lots
+]);
 $layout_content = include_template('layout.php', [
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
-        'title' => 'YetiCave - Главная страница',
-        'content' => $page_content,
-        'categories' => $categories
-    ]
-);
+    'is_auth' => $is_auth,
+    'user_name' => $user_name,
+    'title' => 'YetiCave - Главная страница',
+    'content' => $page_content,
+    'categories' => $categories
+]);
 echo $layout_content;

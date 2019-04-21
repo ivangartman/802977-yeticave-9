@@ -1,7 +1,12 @@
 <?php
 
 require_once 'helpers.php';
+require_once 'functions.php';
+
+date_default_timezone_set("Asia/Novosibirsk");
+
 $is_auth = rand(0, 1);
+
 $user_name = 'Иван'; // укажите здесь ваше имя
 $categories = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
 $lots = [
@@ -42,13 +47,7 @@ $lots = [
         'picture_url' => 'img/lot-6.jpg'
     ]
 ];
-function price_format (float $price): string
-{
-    $price = ceil($price);
-    $price = number_format($price, 0, '', ' ');
 
-    return $price;
-}
 $page_content = include_template('index.php', [
     'categories' => $categories,
     'lots' => $lots

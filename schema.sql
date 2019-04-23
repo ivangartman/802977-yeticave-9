@@ -4,7 +4,7 @@ CREATE DATABASE YetiCave
   DEFAULT COLLATE utf8_general_ci;
 USE YetiCave;
 
--- Создаём таблицу, которая содержит зпрегистрированных пользователей
+-- Создаём таблицу, которая содержит зарегистрированных пользователей
 CREATE TABLE users (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE users (
 );
 CREATE INDEX u_name ON users(name);
 
--- Создаём таблицу, которая содержит котегории
+-- Создаём таблицу, которая содержит категории
 CREATE TABLE category (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   name CHAR(120) NOT NULL UNIQUE,
@@ -27,14 +27,14 @@ CREATE INDEX c_name ON category(name);
 -- Создаём таблицу, которая содержит разыгрываемые лоты
 CREATE TABLE lots (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
-  id_user INT(11) NOT NULL,
-  id_category INT(11) NOT NULL,
+  user_id INT(11) NOT NULL,
+  category_id INT(11) NOT NULL,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   name CHAR(120) NOT NULL,
   content TEXT,
-  picture TEXT,
+  picture_url TEXT,
   price INT(11) NOT NULL,
-  date_end TIMESTAMP,
+  date_end DATETIME,
   step_rate INT(11)
 );
 CREATE INDEX l_name ON lots(name);
@@ -42,8 +42,8 @@ CREATE INDEX l_name ON lots(name);
 -- Создаём таблицу, которая содержит ставки пользователей
 CREATE TABLE rate (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
-  id_user INT(11) NOT NULL,
-  id_lot INT(11) NOT NULL,
+  user_id INT(11) NOT NULL,
+  lot_id INT(11) NOT NULL,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   price INT(11) NOT NULL
 );

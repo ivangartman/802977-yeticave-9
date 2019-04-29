@@ -20,12 +20,15 @@ function price_format(float $price): string
  *
  * @return string
  */
-function timer()
+function timer($date_end)
 {
     $now = strtotime('now');
-    $midninght = strtotime('tomorrow');
+    $midninght = strtotime($date_end);
     $diff = $midninght - $now;
-    return date('H:i', $midninght + $diff);
+    $hours = floor($diff / 3600);
+    $minutes = floor(($diff % 3600) / 60);
+    $formatDate = $hours . ':' . $minutes;
+    return $formatDate;
 }
 
 /**
@@ -33,9 +36,9 @@ function timer()
  *
  * @return bool
  */
-function timer_finishing()
+function timer_finishing($date_end)
 {
-    $timeUnix = strtotime('tomorrow');
+    $timeUnix = strtotime($date_end);
     $now = time();
     $diff = $timeUnix - $now;
 

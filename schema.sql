@@ -30,17 +30,17 @@ CREATE TABLE lots (
   user_id INT(11) NOT NULL,
   category_id INT(11) NOT NULL,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  name_lot CHAR(120) NOT NULL,
+  name CHAR(120) NOT NULL,
   content TEXT,
   picture_url TEXT,
   price INT(11) NOT NULL,
   date_end DATETIME,
   step_rate INT(11)
 );
-CREATE INDEX l_name_lot ON lots(name_lot);
+CREATE INDEX l_name ON lots(name);
 
 -- Создаём таблицу, которая содержит ставки пользователей
-CREATE TABLE rate (
+CREATE TABLE rates (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   user_id INT(11) NOT NULL,
   lot_id INT(11) NOT NULL,

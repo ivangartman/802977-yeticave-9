@@ -66,3 +66,55 @@ function db_fetch_data($link, $sql, $data = [])
 
     return $result;
 }
+
+/**
+ * Выводим страницу с сообщением об ошибке.
+ *
+ * @param $is_auth int Случайное число 0 или 1
+ * @param $user_name string Имя пользователя
+ * @param $title string Название страницы
+ * @param $categories string Название категории
+ *
+ * @return array
+ */
+function error($is_auth, $user_name, $title, $categories)
+{
+    $page_content = include_template('error.php');
+    $layout_content = include_template('layout.php', [
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'title' => $title,
+        'content' => $page_content,
+        'categories' => $categories
+    ]);
+    echo $layout_content;
+    die;
+    return $layout_content;
+}
+
+/**
+ * Добавление новой записи в таблицу lots в MySQL.
+ *
+ * @param $link mysqli Ресурс соединения
+ * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param array $data Данные для вставки на место плейсхолдеров
+ * @param $is_auth int Случайное число 0 или 1
+ * @param $user_name string Имя пользователя
+ * @param $title string Название страницы
+ * @param $categories string Название категории
+ *
+ * @return array
+ */
+
+function db_insert_lot($link, $sql, $data, $is_auth, $user_name, $title, $categories) {
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    $res = mysqli_stmt_execute($stmt);
+    if ($res) {
+        $lot_id = mysqli_insert_id($link);
+        $layout_content = header("Location: lot.php?page=" . $lot_id);
+    } else {
+        $layout_content = error($is_auth, $user_name, $title, $categories);
+    }
+
+    return $layout_content;
+}

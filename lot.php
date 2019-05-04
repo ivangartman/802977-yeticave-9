@@ -1,9 +1,6 @@
 <?php
 
 require_once 'init.php';
-require_once 'helpers.php';
-require_once 'functions.php';
-require_once 'config/database.php';
 
 //---Проверяем был ли отправлен запрос "page"
 if (isset($_GET['page'])) {
@@ -13,19 +10,19 @@ if (isset($_GET['page'])) {
 }
 
 //---Получение id лотов по отправленнному запросу "page"---
-$id = lots_id($link, $page);
+$id = db_lots_id($link, $page);
 if (!$id) {
     $layout_content = error($is_auth, $user_name, $title, $categories);
 } else {
     //---Получение всех категорий---
-    $categories = category_all($link);
+    $categories = db_category_all($link);
     //---Получение содержимого лота по отправленному id---
-    $lots = lots_allid($link, $page);
+    $lots = db_lots_allid($link, $page);
     foreach ($lots as $title) {
         $title = $title['name_lot'];
     }
     //---Получение переченя ставок по id лота---
-    $rates = rate_id($link, $page);
+    $rates = db_rate_id($link, $page);
     $sum = count($rates);//--Подсчёт кол-во ставок
 
     $page_content = include_template('lot.php', [

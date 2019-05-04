@@ -46,23 +46,26 @@ function timer_finishing($date_end)
 }
 
 /**
- * Получение записей с таблиц в MySQL
+ * Выводим страницу с сообщением об ошибке.
  *
- * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
- * @param array $data Данные для вставки на место плейсхолдеров
+ * @param $is_auth int Случайное число 0 или 1
+ * @param $user_name string Имя пользователя
+ * @param $title string Название страницы
+ * @param $categories string Название категории
  *
  * @return array
  */
-function db_fetch_data($link, $sql, $data = [])
+function error($is_auth, $user_name, $title, $categories)
 {
-    $result = [];
-    $stmt = db_get_prepare_stmt($link, $sql, $data);
-    mysqli_stmt_execute($stmt);
-    $res = mysqli_stmt_get_result($stmt);
-    if ($res) {
-        $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
-    }
-
-    return $result;
+    $page_content = include_template('error.php');
+    $layout_content = include_template('layout.php', [
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'title' => $title,
+        'content' => $page_content,
+        'categories' => $categories
+    ]);
+    echo $layout_content;
+    die;
+    return $layout_content;
 }

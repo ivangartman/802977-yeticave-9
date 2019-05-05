@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//---Проверяем был ли 
         $errors['step_rate'] = 'Введите целое число больше 0';
     }
     //---Валидация даты ставки---
-    if (is_date_valid($_POST['date_end']) === 0) {
+    if (is_date_valid($_POST['date_end']) == 0) {
         $errors['date_end'] = 'Введите дату в формате ГГГГ-ММ-ДД';
     }
     //---Валидация изображения---
@@ -72,7 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//---Проверяем был ли 
             $lot['date_end'],
             $lot['step_rate']
         ];
-        db_insert_lot($link, $sql, $data, $is_auth, $user_name, $title, $categories);
+        $res = db_insert_lot($link, $sql, $data);
+        if ($res) {
+            $lot_id = mysqli_insert_id($link);
+            $layout_content = header("Location: lot.php?page=" . $lot_id);
+        } else {
+            $layout_content = error($is_auth, $user_name, $title, $categories);
+        }
     }
 } else {
     $page_content = include_template('add.php', [

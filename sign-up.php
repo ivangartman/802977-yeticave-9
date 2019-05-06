@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//---Проверяем был ли 
         'name' => 'Введите имя',
         'contact' => 'Напишите как с вами связаться'
     ];
-    //---Валидация паролля, имени, контактов---
+    //---Валидация пароля, имени, контактов---
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
             $errors[$key] = $error_massage[$key];
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//---Проверяем был ли 
         ];
         $res = db_insert_user($link, $sql, $data);
         if ($res) {
-            $layout_content = header("Location: pages/login.html");
+            header("Location: pages/login.html");
         } else {
             $layout_content = error($is_auth, $user_name, $title, $categories);
         }

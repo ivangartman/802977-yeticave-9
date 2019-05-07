@@ -95,7 +95,7 @@ function db_rate_id($link, $page)
 }
 
 /**
- * Получение записей с таблиц в MySQL
+ * Получение записей с таблиц в MySQL.
  *
  * @param $link mysqli Ресурс соединения
  * @param $sql string SQL запрос с плейсхолдерами вместо значений
@@ -116,34 +116,62 @@ function db_fetch_data($link, $sql, $data = [])
     return $result;
 }
 
+//---Добавление новой записи в таблицу lots---
+$db_add_lot = "INSERT INTO lots (user_id, category_id, name, content, picture_url, price, date_end, step_rate)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
 /**
  * Добавление новой записи в таблицу lots в MySQL.
  *
  * @param $link mysqli Ресурс соединения
  * @param $sql string SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
- * @param $is_auth int Случайное число 0 или 1
- * @param $user_name string Имя пользователя
- * @param $title string Название страницы
- * @param $categories string Название категории
  *
  * @return array
  */
 
-function db_insert_lot($link, $sql, $data, $is_auth, $user_name, $title, $categories)
+function db_insert_lot($link, $sql, $data)
+{
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    $result = mysqli_stmt_execute($stmt);
+
+    return $result;
+}
+
+/**
+ * Проверяем есть ли уже такаой e-mail в БД.
+ *
+ * @param $link mysqli Ресурс соединения
+ * @param $email E-mail пользователя
+ *
+ * @return array
+ */
+function db_user_email($link, $email)
+{
+    $sql = "SELECT id FROM users WHERE email = '$email'";
+    $user_email = db_fetch_data($link, $sql);
+
+    return $user_email;
+}
+
+//---Добавление новой записи в таблицу users---
+$db_add_user = "INSERT INTO users (email, password, name, contact) 
+             VALUES (?, ?, ?, ?)";
+
+/**
+ * Добавление новой записи в таблицу users в MySQL.
+ *
+ * @param $link mysqli Ресурс соединения
+ * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param array $data Данные для вставки на место плейсхолдеров
+ *
+ * @return array
+ */
+
+function db_insert_user($link, $sql, $data)
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     $res = mysqli_stmt_execute($stmt);
-    if ($res) {
-        $lot_id = mysqli_insert_id($link);
-        $layout_content = header("Location: lot.php?page=" . $lot_id);
-    } else {
-        $layout_content = error($is_auth, $user_name, $title, $categories);
-    }
 
-    return $layout_content;
+    return $res;
 }
-
-//---Добавление новой записи в таблицу lots---
-$db_add_lot = "INSERT INTO lots (user_id, category_id, name, content, picture_url, price, date_end, step_rate)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

@@ -4,7 +4,7 @@ $db = require_once 'config/database.php';
 $link = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
 mysqli_set_charset($link, "utf8");
 if (!$link) {
-    $layout_content = error($is_auth, $user_name, $title, $categories);
+    $html = error($is_auth, $user_name, $title, $categories);
 }
 
 /**

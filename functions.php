@@ -58,17 +58,18 @@ function timer_finishing($date_end)
  *
  * @return array
  */
-function error($title, $categories, $error_message)
+function error($title, $categories, $error_message, $user_name)
 {
     $page_content = include_template('error.php', [
         'error_message' => $error_message
     ]);
-    $layout_content = include_template('layout.php', [
+    $html = include_template('layout.php', [
+        'user_name' => $user_name,
         'title' => $title,
         'content' => $page_content,
         'categories' => $categories
     ]);
-    echo $layout_content;
+    echo $html;
     die;
-    return $layout_content;
+    return $html;
 }

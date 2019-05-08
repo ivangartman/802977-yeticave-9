@@ -10,8 +10,6 @@ $page_content = include_template('index.php', [
     'lots' => $lots
 ]);
 $layout_content = include_template('layout.php', [
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
     'title' => $title,
     'content' => $page_content,
     'categories' => $categories,

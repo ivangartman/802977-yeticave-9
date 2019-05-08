@@ -3,10 +3,8 @@
 require_once 'init.php';
 
 $categories = db_category_all($link);
-$lots = db_lots_all($link);
-
 $page_content = include_template('sign-up.php', [
-    'categories' => $categories,
+    'categories' => $categories
 ]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {//---Проверяем был ли отправлен запрос "POST"
@@ -55,18 +53,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//---Проверяем был ли 
         if ($res) {
             header("Location: pages/login.html");
         } else {
-            $layout_content = error($is_auth, $user_name, $title, $categories);
+            $error_message = 'Новый пользователь не зарегестрирован';
+            $layout_content = error($title, $categories, $error_message);
         }
     }
 } else {
     $page_content = include_template('sign-up.php', [
-        'categories' => $categories,
+        'categories' => $categories
     ]);
 }
 
 $layout_content = include_template('layout.php', [
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
     'title' => $title,
     'content' => $page_content,
     'categories' => $categories,

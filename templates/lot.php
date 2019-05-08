@@ -18,6 +18,7 @@
                 <p class="lot-item__category">Категория: <span><?= htmlspecialchars($lot['name_cat']) ?></span></p>
                 <p class="lot-item__description"><?= htmlspecialchars($lot['content']) ?></p>
             </div>
+            <?php if (isset($_SESSION['user'])): ?>
             <div class="lot-item__right">
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer <?= timer_finishing($lot['date_end']) ? 'timer--finishing' : '' ?>">
@@ -55,6 +56,7 @@
                     </table>
                 </div>
             </div>
+            <?php endif ?>
         </div>
     <?php endforeach ?>
 </section>

@@ -10,7 +10,7 @@ if (!$link) {
 /**
  * Получение всех категорий из таблицы category.
  *
- * @param $link mysqli Ресурс соединения
+ * @param mysqli $link Ресурс соединения
  *
  * @return array
  */
@@ -25,7 +25,7 @@ function db_category_all($link)
 /**
  * Получение содержимого лотов.
  *
- * @param $link mysqli Ресурс соединения
+ * @param mysqli $link Ресурс соединения
  *
  * @return array
  */
@@ -43,7 +43,7 @@ function db_lots_all($link)
  * Получение id лотов по отправленнному запросу "page".
  *
  * @param $link mysqli Ресурс соединения
- * @param $page id лота
+ * @param int $page id лота
  *
  * @return array
  */
@@ -58,8 +58,8 @@ function db_lots_id($link, $page)
 /**
  * Получение содержимого лотов по отправленному id.
  *
- * @param $link mysqli Ресурс соединения
- * @param $page id лота
+ * @param mysqli $link Ресурс соединения
+ * @param int $page id лота
  *
  * @return array
  */
@@ -78,8 +78,8 @@ function db_lots_allid($link, $page)
 /**
  * Получение переченя ставок по id лота.
  *
- * @param $link mysqli Ресурс соединения
- * @param $page id лота
+ * @param mysqli $link Ресурс соединения
+ * @param int $page id лота
  *
  * @return array
  */
@@ -97,8 +97,8 @@ function db_rate_id($link, $page)
 /**
  * Получение записей с таблиц в MySQL.
  *
- * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param mysqli $link Ресурс соединения
+ * @param string $sql SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
  *
  * @return array
@@ -123,8 +123,8 @@ $db_add_lot = "INSERT INTO lots (user_id, category_id, name, content, picture_ur
 /**
  * Добавление новой записи в таблицу lots в MySQL.
  *
- * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param mysqli $link Ресурс соединения
+ * @param string $sql SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
  *
  * @return array
@@ -139,10 +139,10 @@ function db_insert_lot($link, $sql, $data)
 }
 
 /**
- * Проверяем есть ли уже такаой e-mail в БД.
+ * Проверяем есть ли уже такой e-mail в БД.
  *
- * @param $link mysqli Ресурс соединения
- * @param $email E-mail пользователя
+ * @param mysqli $link Ресурс соединения
+ * @param string $email E-mail пользователя
  *
  * @return array
  */
@@ -161,8 +161,8 @@ $db_add_user = "INSERT INTO users (email, password, name, contact)
 /**
  * Добавление новой записи в таблицу users в MySQL.
  *
- * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param mysqli $link Ресурс соединения
+ * @param string $sql SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
  *
  * @return array
@@ -174,4 +174,18 @@ function db_insert_user($link, $sql, $data)
     $res = mysqli_stmt_execute($stmt);
 
     return $res;
+}
+
+/**
+ * Получение переченя ставок по id лота.
+ *
+ * @param string $email E-mail пользователя
+ *
+ * @return array
+ */
+function db_email($email)
+{
+    $sql = "SELECT * FROM users WHERE email = '$email'";
+
+    return $sql;
 }

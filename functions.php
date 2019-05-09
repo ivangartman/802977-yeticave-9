@@ -3,7 +3,7 @@
 /**
  * Добовляет пробел после 3 нулей к цене слота.
  *
- * @param $price int Цена лота
+ * @param int $price Цена лота
  *
  * @return string
  */
@@ -17,6 +17,8 @@ function price_format(float $price): string
 
 /**
  * Выводим оставшееся время до полуночи.
+ *
+ * @param string $date_end Дата окончания лота
  *
  * @return string
  */
@@ -34,6 +36,8 @@ function timer($date_end)
 /**
  * Проверяем осталось меньше часа или нет до данного времени.
  *
+ * @param string $date_end Дата окончания лота
+ *
  * @return bool
  */
 function timer_finishing($date_end)
@@ -48,24 +52,24 @@ function timer_finishing($date_end)
 /**
  * Выводим страницу с сообщением об ошибке.
  *
- * @param $is_auth int Случайное число 0 или 1
- * @param $user_name string Имя пользователя
- * @param $title string Название страницы
- * @param $categories string Название категории
+ * @param string $title Название страницы
+ * @param string $categories Название категории
+ * @param string $error_message Текст сообщения об ощибке
  *
  * @return array
  */
-function error($is_auth, $user_name, $title, $categories)
+function error($title, $categories, $error_message, $user_name)
 {
-    $page_content = include_template('error.php');
-    $layout_content = include_template('layout.php', [
-        'is_auth' => $is_auth,
+    $page_content = include_template('error.php', [
+        'error_message' => $error_message
+    ]);
+    $html = include_template('layout.php', [
         'user_name' => $user_name,
         'title' => $title,
         'content' => $page_content,
         'categories' => $categories
     ]);
-    echo $layout_content;
+    echo $html;
     die;
-    return $layout_content;
+    return $html;
 }

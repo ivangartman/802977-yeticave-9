@@ -9,12 +9,11 @@ $page_content = include_template('index.php', [
     'categories' => $categories,
     'lots' => $lots
 ]);
-$layout_content = include_template('layout.php', [
-    'is_auth' => $is_auth,
+$html = include_template('layout.php', [
     'user_name' => $user_name,
     'title' => $title,
     'content' => $page_content,
     'categories' => $categories,
     'main_class' => 'class="container"'
 ]);
-echo $layout_content;
+echo $html;

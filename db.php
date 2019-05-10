@@ -130,7 +130,7 @@ $db_add_lot = "INSERT INTO lots (user_id, category_id, name, content, picture_ur
  * @return array
  */
 
-function db_insert_lot($link, $sql, $data)
+function db_insert($link, $sql, $data)
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     $result = mysqli_stmt_execute($stmt);
@@ -159,24 +159,6 @@ $db_add_user = "INSERT INTO users (email, password, name, contact)
              VALUES (?, ?, ?, ?)";
 
 /**
- * Добавление новой записи в таблицу users в MySQL.
- *
- * @param mysqli $link Ресурс соединения
- * @param string $sql SQL запрос с плейсхолдерами вместо значений
- * @param array $data Данные для вставки на место плейсхолдеров
- *
- * @return array
- */
-
-function db_insert_user($link, $sql, $data)
-{
-    $stmt = db_get_prepare_stmt($link, $sql, $data);
-    $res = mysqli_stmt_execute($stmt);
-
-    return $res;
-}
-
-/**
  * Получение переченя ставок по id лота.
  *
  * @param string $email E-mail пользователя
@@ -188,4 +170,64 @@ function db_email($email)
     $sql = "SELECT * FROM users WHERE email = '$email'";
 
     return $sql;
+}
+
+//---Добавление новой ставки в таблицу rates---
+$db_add_rate = "INSERT INTO rates (user_id, lot_id, price)
+                VALUES (?, ?, ?)";
+
+/**
+ * Получение максимальной ставки.
+ *
+ * @param mysqli $link Ресурс соединения
+ * @param int $page id лота
+ *
+ * @return array
+ */
+function db_price_max($link, $page)
+{
+    $sql = "SELECT r.price, r.user_id, l.step_rate FROM rates r
+            JOIN lots l ON r.lot_id = l.id
+            WHERE r.lot_id = $page
+            ORDER BY r.price DESC LIMIT 1";
+    $price_max = db_fetch_data($link, $sql);
+
+    return $price_max;
+}
+
+/**
+ * Получение стоимости лота.
+ *
+ * @param mysqli $link Ресурс соединения
+ * @param int $page id лота
+ *
+ * @return array
+ */
+function db_price_lot($link, $page)
+{
+    $sql = "SELECT price FROM lots WHERE id = $page";
+    $price_lot = db_fetch_data($link, $sql);
+
+    return $price_lot;
+}
+
+/**
+ * Получение переченя лотов пользователя по id лота.
+ *
+ * @param mysqli $link Ресурс соединения
+ * @param int $page id лота
+ *
+ * @return array
+ */
+function db__lots_user($link, $user_id)
+{
+    $sql = "SELECT l.name AS name_lot, cat.name AS name_cat, l.picture_url, l.date_end, r.price, r.date_add, l.id, r.user_id, u.contact FROM rates r
+            JOIN lots l ON r.lot_id = l.id 
+            JOIN users u ON r.user_id = u.id
+            JOIN category cat ON l.category_id = cat.id
+            WHERE r.user_id = $user_id                          
+            ORDER BY r.id DESC";
+    $db_lots_user = db_fetch_data($link, $sql);
+
+    return $db_lots_user;
 }

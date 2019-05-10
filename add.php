@@ -65,7 +65,7 @@ if (!$user_name) {
             ]);
         } else {
             //Добавление новой записи в таблицу lots в MySQL
-            $lot['user_id'] = '1';
+            $lot['user_id'] = $_SESSION['user']['id'];
             $sql = $db_add_lot;
             $data = [
                 $lot['user_id'],
@@ -77,7 +77,7 @@ if (!$user_name) {
                 $lot['date_end'],
                 $lot['step_rate']
             ];
-            $res = db_insert_lot($link, $sql, $data);
+            $res = db_insert($link, $sql, $data);
             if ($res) {
                 $lot_id = mysqli_insert_id($link);
                 header("Location: lot.php?page=" . $lot_id);

@@ -49,9 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
             $user['name'],
             $user['contact']
         ];
-        $res = db_insert_user($link, $sql, $data);
+        $res = db_insert($link, $sql, $data);
         if ($res) {
-            header("Location: pages/login.html");
+            header("Location: login.php");
         } else {
             $error_message = 'Новый пользователь не зарегестрирован';
             $html = error($title, $categories, $error_message, $user_name);

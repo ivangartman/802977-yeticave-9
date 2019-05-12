@@ -50,6 +50,23 @@ function timer_finishing($date_end)
 }
 
 /**
+ * Проверяем время до закрытия лота.
+ *
+ * @param string $date_end Дата окончания лота
+ *
+ * @return bool
+ */
+function timer_end($date_end)
+{
+    $timeUnix = strtotime($date_end);
+    $now = time();
+    $diff = $timeUnix - $now;
+    if ($diff <= 0) {
+        return $diff;
+    }
+}
+
+/**
  * Выводим страницу с сообщением об ошибке.
  *
  * @param string $title Название страницы
@@ -72,4 +89,34 @@ function error($title, $categories, $error_message, $user_name)
     echo $html;
     die;
     return $html;
+}
+
+/**
+ * Преобразуем дату добавления ставки.
+ *
+ * @param array $data Массив с данными
+ *
+ * @return array
+ */
+function date_rate($data)
+{
+    $lots = [];
+    foreach ($data as $lot) {
+        $time = time() - strtotime($lot['date_add']);
+        if ($time < 60) {
+            $lot['date_add'] = $time . get_noun_plural_form($time, ' секунду', ' секунды', ' секунд') . ' назад';
+            $lots[] = $lot;
+        } else if ($time < 3600) {
+            $lot['date_add'] = floor($time / 60) . get_noun_plural_form(floor($time / 60), ' минуту', ' минуты', ' минут') . ' назад';
+            $lots[] = $lot;
+        } else if ($time < 86400) {
+            $lot['date_add'] = floor($time / 3600) . get_noun_plural_form(floor($time / 3600), ' час', ' часа', ' часов') . ' назад';
+            $lots[] = $lot;
+        } else {
+            $lot['date_add'] = floor($time / 86400) . get_noun_plural_form(floor($time / 86400), ' день', ' дня', ' дней') . ' назад';
+            $lots[] = $lot;
+        }
+    }
+
+    return $lots;
 }

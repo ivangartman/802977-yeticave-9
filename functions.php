@@ -29,7 +29,8 @@ function timer($date_end)
     $diff = $midninght - $now;
     $hours = floor($diff / 3600);
     $minutes = floor(($diff % 3600) / 60);
-    $formatDate = $hours . ':' . $minutes;
+    $formatDate = $hours.':'.$minutes;
+
     return $formatDate;
 }
 
@@ -56,7 +57,7 @@ function timer_finishing($date_end)
  *
  * @return bool
  */
-function timer_end($date_end)
+function endDate($date_end)
 {
     $timeUnix = strtotime($date_end);
     $now = time();
@@ -69,8 +70,8 @@ function timer_end($date_end)
 /**
  * Выводим страницу с сообщением об ошибке.
  *
- * @param string $title Название страницы
- * @param string $categories Название категории
+ * @param string $title         Название страницы
+ * @param string $categories    Название категории
  * @param string $error_message Текст сообщения об ощибке
  *
  * @return array
@@ -78,16 +79,17 @@ function timer_end($date_end)
 function error($title, $categories, $error_message, $user_name)
 {
     $page_content = include_template('error.php', [
-        'error_message' => $error_message
+        'error_message' => $error_message,
     ]);
     $html = include_template('layout.php', [
-        'user_name' => $user_name,
-        'title' => $title,
-        'content' => $page_content,
-        'categories' => $categories
+        'user_name'  => $user_name,
+        'title'      => $title,
+        'content'    => $page_content,
+        'categories' => $categories,
     ]);
     echo $html;
     die;
+
     return $html;
 }
 
@@ -104,16 +106,16 @@ function date_rate($data)
     foreach ($data as $lot) {
         $time = time() - strtotime($lot['date_add']);
         if ($time < 60) {
-            $lot['date_add'] = $time . get_noun_plural_form($time, ' секунду', ' секунды', ' секунд') . ' назад';
+            $lot['date_add'] = $time.get_noun_plural_form($time, ' секунду',' секунды', ' секунд').' назад';
             $lots[] = $lot;
-        } else if ($time < 3600) {
-            $lot['date_add'] = floor($time / 60) . get_noun_plural_form(floor($time / 60), ' минуту', ' минуты', ' минут') . ' назад';
+        } elseif ($time < 3600) {
+            $lot['date_add'] = floor($time / 60).get_noun_plural_form(floor($time / 60), ' минуту', ' минуты',' минут').' назад';
             $lots[] = $lot;
-        } else if ($time < 86400) {
-            $lot['date_add'] = floor($time / 3600) . get_noun_plural_form(floor($time / 3600), ' час', ' часа', ' часов') . ' назад';
+        } elseif ($time < 86400) {
+            $lot['date_add'] = floor($time / 3600).get_noun_plural_form(floor($time / 3600), ' час', ' часа',' часов').' назад';
             $lots[] = $lot;
         } else {
-            $lot['date_add'] = floor($time / 86400) . get_noun_plural_form(floor($time / 86400), ' день', ' дня', ' дней') . ' назад';
+            $lot['date_add'] = floor($time / 86400).get_noun_plural_form(floor($time / 86400), ' день', ' дня',' дней').' назад';
             $lots[] = $lot;
         }
     }

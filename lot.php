@@ -21,7 +21,7 @@ if (isset($_GET['page'])) {
         $price_max = $price['price'];
         $step_rate = $price['step_rate'];
     }
-    foreach (db_price_lot($link, $page) as $price_lot) {
+    foreach (db_price($link, $page) as $price_lot) {
         $price_lot = $price_lot['price'];
     }
     if ($price_lot > $price_max) {
@@ -34,21 +34,19 @@ if (isset($_GET['page'])) {
     } elseif ((int)($_POST['price']) === 0) {
         $errors['price'] = 'Введите целое число';
     } elseif ($_POST['price'] < $min_rate) {
-        $errors['price'] = 'Сделайте ставку не меньше ' . price_format($min_rate) . ' р';
+        $errors['price'] = 'Сделайте ставку не меньше '.price_format($min_rate).' р';
     }
 
-    if (!count($errors)) {
+    if (! count($errors)) {
         //---Добавление новой записи в таблицу lots в MySQL---
         $sql = $db_add_rate;
         $data = [
             $rate['user_id'],
             $rate['lot_id'],
-            $rate['price']
+            $rate['price'],
         ];
         $res = db_insert($link, $sql, $data);
-        if ($res) {
-            //header("Location: lot.php");
-        } else {
+        if (! $res) {
             $error_message = 'Ставка не добавлена';
             $html = error($title, $categories, $error_message, $user_name);
         }
@@ -66,7 +64,7 @@ $min_rate = $price_max + floor(($price_max / 100) * $step_rate);
 
 //Получение id лотов по отправленнному запросу "page"
 $id = db_lots_id($link, $page);
-if (!$id) {
+if (! $id) {
     $error_message = 'Данной страницы не существует на сайте';
     $html = error($title, $categories, $error_message, $user_name);
 } else {
@@ -81,22 +79,22 @@ if (!$id) {
     $rates = date_rate($rates);//Преобразуем дату добавления ставки
 
     $page_content = include_template('lot.php', [
-        'user_name' => $user_name,
+        'user_name'  => $user_name,
         'categories' => $categories,
-        'lots' => $lots,
-        'rates' => $rates,
-        'sum' => $sum,
-        'rate' => $rate,
-        'errors' => $errors,
-        'min_rate' => $min_rate
+        'lots'       => $lots,
+        'rates'      => $rates,
+        'sum'        => $sum,
+        'rate'       => $rate,
+        'errors'     => $errors,
+        'min_rate'   => $min_rate,
     ]);
 }
 
 $html = include_template('layout.php', [
-    'user_name' => $user_name,
-    'title' => $title,
-    'content' => $page_content,
+    'user_name'  => $user_name,
+    'title'      => $title,
+    'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "'
+    'main_class' => 'class=" "',
 ]);
 echo $html;

@@ -4,7 +4,7 @@ require_once 'init.php';
 
 $categories = db_category_all($link);
 
-if (!$user_name) {
+if (! $user_name) {
     $error_message = 'Для доступа к странице необходимо зарегистрироваться';
     $html = error($title, $categories, $error_message, $user_name);
     exit();
@@ -12,15 +12,14 @@ if (!$user_name) {
     $page_content = include_template('add.php', [
         'categories' => $categories
     ]);
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли отправлен запрос "POST"
         $lot = $_POST;
         $required = ['name', 'category_id', 'content'];
         $errors = [];
         $error_massage = [
-            'name' => 'Введите наименование лота',
+            'name'        => 'Введите наименование лота',
             'category_id' => 'Выберите категорию',
-            'content' => 'Напишите описание лота'
+            'content'     => 'Напишите описание лота'
         ];
         //Валидация имени, категории, описания
         foreach ($required as $key) {
@@ -37,7 +36,7 @@ if (!$user_name) {
             $errors['step_rate'] = 'Введите целое число больше 0';
         }
         //Валидация даты ставки
-        if (!is_date_valid($_POST['date_end'])) {
+        if (! is_date_valid($_POST['date_end'])) {
             $errors['date_end'] = 'Введите дату в формате ГГГГ-ММ-ДД';
         }
         //Валидация изображения
@@ -47,20 +46,19 @@ if (!$user_name) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_type = finfo_file($finfo, $tmp_name);
             if (($file_type === 'image/png') || ($file_type === 'image/jpeg') || ($file_type === 'image/jpg')) {
-                $filename = uniqid() . '.' . substr($file_type, 6);
+                $filename = uniqid().'.'.substr($file_type, 6);
                 $lot['picture_url'] = $filename;
-                move_uploaded_file($_FILES['lot-img'] ['tmp_name'], 'uploads/' . $filename);
+                move_uploaded_file($_FILES['lot-img'] ['tmp_name'],'uploads/'.$filename);
             } else {
                 $errors['lot-img'] = 'Загрузите изображение в формате ipg, jpeg, png';
             }
         } else {
             $errors['lot-img'] = 'Загрузите изображение';
         }
-
         if (count($errors)) {
             $page_content = include_template('add.php', [
-                'lot' => $lot,
-                'errors' => $errors,
+                'lot'        => $lot,
+                'errors'     => $errors,
                 'categories' => $categories
             ]);
         } else {
@@ -72,7 +70,7 @@ if (!$user_name) {
                 $lot['category_id'],
                 $lot['name'],
                 $lot['content'],
-                'uploads/' . $lot['picture_url'],
+                'uploads/'.$lot['picture_url'],
                 $lot['price'],
                 $lot['date_end'],
                 $lot['step_rate']
@@ -80,7 +78,7 @@ if (!$user_name) {
             $res = db_insert($link, $sql, $data);
             if ($res) {
                 $lot_id = mysqli_insert_id($link);
-                header("Location: lot.php?page=" . $lot_id);
+                header("Location: lot.php?page=".$lot_id);
             } else {
                 $error_message = 'Новый лот не добавлен';
                 $html = error($title, $categories, $error_message, $user_name);
@@ -88,15 +86,15 @@ if (!$user_name) {
         }
     } else {
         $page_content = include_template('add.php', [
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 }
 
 $html = include_template('layout.php', [
-    'user_name' => $user_name,
-    'title' => $title,
-    'content' => $page_content,
+    'user_name'  => $user_name,
+    'title'      => $title,
+    'content'    => $page_content,
     'categories' => $categories,
     'main_class' => 'class=" "'
 ]);

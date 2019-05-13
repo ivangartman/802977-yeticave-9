@@ -38,6 +38,7 @@ CREATE TABLE lots (
   step_rate INT(11)
 );
 CREATE INDEX l_name ON lots(name);
+CREATE FULLTEXT INDEX name_content ON lots(name, content);
 
 -- Создаём таблицу, которая содержит ставки пользователей
 CREATE TABLE rates (

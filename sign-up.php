@@ -4,7 +4,7 @@ require_once 'init.php';
 
 $categories = db_category_all($link);
 $page_content = include_template('sign-up.php', [
-    'categories' => $categories
+    'categories' => $categories,
 ]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли отправлен запрос "POST"
@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
     $errors = [];
     $error_massage = [
         'password' => 'Введите пароль',
-        'name' => 'Введите имя',
-        'contact' => 'Напишите как с вами связаться'
+        'name'     => 'Введите имя',
+        'contact'  => 'Напишите как с вами связаться',
     ];
     //Валидация пароля, имени, контактов
     foreach ($required as $key) {
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
         }
     }
     //Валидация e-mail
-    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    if (! filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'Введите коректный e-mail';
     }
 
@@ -35,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
 
     if (count($errors)) {
         $page_content = include_template('sign-up.php', [
-            'user' => $user,
-            'errors' => $errors,
-            'categories' => $categories
+            'user'       => $user,
+            'errors'     => $errors,
+            'categories' => $categories,
         ]);
     } else {
         //Добавление новой записи в таблицу users в MySQL
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
             $user['email'],
             $user['password'],
             $user['name'],
-            $user['contact']
+            $user['contact'],
         ];
         $res = db_insert($link, $sql, $data);
         if ($res) {
@@ -59,15 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
     }
 } else {
     $page_content = include_template('sign-up.php', [
-        'categories' => $categories
+        'categories' => $categories,
     ]);
 }
 
 $html = include_template('layout.php', [
-    'user_name' => $user_name,
-    'title' => $title,
-    'content' => $page_content,
+    'user_name'  => $user_name,
+    'title'      => $title,
+    'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "'
+    'main_class' => 'class=" "',
 ]);
 echo $html;

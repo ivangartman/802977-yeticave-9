@@ -1,9 +1,10 @@
 <?php
 
 $db = require_once 'config/database.php';
-$link = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
+$link = mysqli_connect($db['host'], $db['user'], $db['password'],
+    $db['database']);
 mysqli_set_charset($link, "utf8");
-if (!$link) {
+if ( ! $link) {
     $html = error($is_auth, $user_name, $title, $categories);
 }
 
@@ -42,8 +43,8 @@ function db_lots_all($link)
 /**
  * Получение id лотов по отправленнному запросу "page".
  *
- * @param $link mysqli Ресурс соединения
- * @param int $page id лота
+ * @param mysqli $link Ресурс соединения
+ * @param int    $page id лота
  *
  * @return array
  */
@@ -59,7 +60,7 @@ function db_lots_id($link, $page)
  * Получение содержимого лотов по отправленному id.
  *
  * @param mysqli $link Ресурс соединения
- * @param int $page id лота
+ * @param int    $page id лота
  *
  * @return array
  */
@@ -79,7 +80,7 @@ function db_lots_allid($link, $page)
  * Получение переченя ставок по id лота.
  *
  * @param mysqli $link Ресурс соединения
- * @param int $page id лота
+ * @param int    $page id лота
  *
  * @return array
  */
@@ -98,8 +99,8 @@ function db_rate_id($link, $page)
  * Получение записей с таблиц в MySQL.
  *
  * @param mysqli $link Ресурс соединения
- * @param string $sql SQL запрос с плейсхолдерами вместо значений
- * @param array $data Данные для вставки на место плейсхолдеров
+ * @param string $sql  SQL запрос с плейсхолдерами вместо значений
+ * @param array  $data Данные для вставки на место плейсхолдеров
  *
  * @return array
  */
@@ -124,8 +125,8 @@ $db_add_lot = "INSERT INTO lots (user_id, category_id, name, content, picture_ur
  * Добавление новой записи в таблицу lots в MySQL.
  *
  * @param mysqli $link Ресурс соединения
- * @param string $sql SQL запрос с плейсхолдерами вместо значений
- * @param array $data Данные для вставки на место плейсхолдеров
+ * @param string $sql  SQL запрос с плейсхолдерами вместо значений
+ * @param array  $data Данные для вставки на место плейсхолдеров
  *
  * @return array
  */
@@ -141,7 +142,7 @@ function db_insert($link, $sql, $data)
 /**
  * Проверяем есть ли уже такой e-mail в БД.
  *
- * @param mysqli $link Ресурс соединения
+ * @param mysqli $link  Ресурс соединения
  * @param string $email E-mail пользователя
  *
  * @return array
@@ -161,15 +162,18 @@ $db_add_user = "INSERT INTO users (email, password, name, contact)
 /**
  * Получение переченя ставок по id лота.
  *
+ * @param mysqli $link  Ресурс соединения
  * @param string $email E-mail пользователя
  *
  * @return array
  */
-function db_email($email)
+function db_email($link, $email)
 {
     $sql = "SELECT * FROM users WHERE email = '$email'";
+    $res = mysqli_query($link, $sql);
+    $user = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
 
-    return $sql;
+    return $user;
 }
 
 //---Добавление новой ставки в таблицу rates---
@@ -180,7 +184,7 @@ $db_add_rate = "INSERT INTO rates (user_id, lot_id, price)
  * Получение максимальной ставки.
  *
  * @param mysqli $link Ресурс соединения
- * @param int $page id лота
+ * @param int    $page id лота
  *
  * @return array
  */
@@ -199,27 +203,27 @@ function db_price_max($link, $page)
  * Получение стоимости лота.
  *
  * @param mysqli $link Ресурс соединения
- * @param int $page id лота
+ * @param int    $page id лота
  *
  * @return array
  */
-function db_price_lot($link, $page)
+function db_price($link, $page)
 {
     $sql = "SELECT price FROM lots WHERE id = $page";
-    $price_lot = db_fetch_data($link, $sql);
+    $price = db_fetch_data($link, $sql);
 
-    return $price_lot;
+    return $price;
 }
 
 /**
  * Получение переченя лотов пользователя по id лота.
  *
  * @param mysqli $link Ресурс соединения
- * @param int $page id лота
+ * @param int    $user_id id пользователя
  *
  * @return array
  */
-function db__lots_user($link, $user_id)
+function db_lots($link, $user_id)
 {
     $sql = "SELECT l.name AS name_lot, cat.name AS name_cat, l.picture_url, l.date_end, r.price, r.date_add, l.id, r.user_id, u.contact FROM rates r
             JOIN lots l ON r.lot_id = l.id 
@@ -227,7 +231,46 @@ function db__lots_user($link, $user_id)
             JOIN category cat ON l.category_id = cat.id
             WHERE r.user_id = $user_id                          
             ORDER BY r.id DESC";
-    $db_lots_user = db_fetch_data($link, $sql);
+    $db_lots = db_fetch_data($link, $sql);
 
-    return $db_lots_user;
+    return $db_lots;
+}
+
+/**
+ * Полнотекстовый поиск по наименованию и описанию лота.
+ *
+ * @param mysqli $link   Ресурс соединения
+ * @param string $search Выражение по которому идёт поиск
+ *
+ * @return array
+ */
+function db_lots_search($link, $search)
+{
+    $sql = "SELECT cat.name AS name_cat, l.name AS name_lot, l.id, l.price, l.picture_url, l.date_end FROM lots l
+            JOIN category cat ON l.category_id = cat.id
+            WHERE MATCH(l.name, l.content) AGAINST('$search*' IN BOOLEAN MODE)";
+    $db_lots_search = db_fetch_data($link, $sql);
+
+    return $db_lots_search;
+}
+
+/**
+ * Полнотекстовый поиск по наименованию и описанию лота + плагинация.
+ *
+ * @param mysqli $link       Ресурс соединения
+ * @param string $search     Выражение по которому идёт поиск
+ * @param int    $page_items Количество выводимых записей
+ * @param int    $offset     Смещение выборки
+ *
+ * @return array
+ */
+function db_lots_search_page($link, $search, $page_items, $offset)
+{
+    $sql = "SELECT cat.name AS name_cat, l.name AS name_lot, l.id, l.price, l.picture_url, l.date_end FROM lots l
+            JOIN category cat ON l.category_id = cat.id
+            WHERE MATCH(l.name, l.content) AGAINST('$search*' IN BOOLEAN MODE)
+            ORDER BY l.id DESC LIMIT $page_items OFFSET $offset";
+    $db_lots_search_page = db_fetch_data($link, $sql);
+
+    return $db_lots_search_page;
 }

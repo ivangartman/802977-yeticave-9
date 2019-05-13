@@ -5,7 +5,7 @@ require_once 'init.php';
 $categories = db_category_all($link);
 
 $page_content = include_template('login.php', [
-    'categories' => $categories
+    'categories' => $categories,
 ]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли отправлен запрос "POST"
@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
     $required = ['email', 'password'];
     $errors = [];
     $error_massage = [
-        'email' => 'Введите e-mail',
-        'password' => 'Введите пароль'
+        'email'    => 'Введите e-mail',
+        'password' => 'Введите пароль',
     ];
     //Валидация пароля, имени, контактов
     foreach ($required as $key) {
@@ -24,9 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
     }
     //Проверяем есть ли такой E-mail в БД
     $email = mysqli_real_escape_string($link, $login['email']);
-    $sql = db_email($email);
-    $res = mysqli_query($link, $sql);
-    $user = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
+    $user = db_email($link, $email);
     if ($user) {
         if (password_verify($login['password'], $user['password'])) {
             $_SESSION['user'] = $user;
@@ -40,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
 
     if (count($errors)) {
         $page_content = include_template('login.php', [
-            'login' => $login,
-            'errors' => $errors,
-            'categories' => $categories
+            'login'      => $login,
+            'errors'     => $errors,
+            'categories' => $categories,
         ]);
     } else {
         $main_class = 'class="container"';
@@ -50,13 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
     }
 } else {
     $page_content = include_template('login.php', [
-        'categories' => $categories
+        'categories' => $categories,
     ]);
 }
 $html = include_template('layout.php', [
-    'user_name' => $user_name,
-    'title' => $title,
-    'content' => $page_content,
+    'user_name'  => $user_name,
+    'title'      => $title,
+    'content'    => $page_content,
     'categories' => $categories,
     'main_class' => $main_class,
 ]);

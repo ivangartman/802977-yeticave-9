@@ -12,7 +12,7 @@
     <table class="rates__list">
         <?php foreach ($lots_user as $lot): ?>
             <?php foreach (db_price_max($link, $lot['id']) as $price_max): ?>
-                <?php if ($price_max['user_id'] == $user_id and timer_end($lot['date_end'])): ?>
+                <?php if ($price_max['user_id'] == $user_id and endDate($lot['date_end'])): ?>
                     <tr class="rates__item rates__item--win">
                         <td class="rates__info">
                             <div class="rates__img">
@@ -37,7 +37,7 @@
                             <?= htmlspecialchars($lot['date_add']) ?>
                         </td>
                     </tr>
-                <?php elseif (timer_end($lot['date_end'])): ?>
+                <?php elseif (endDate($lot['date_end'])): ?>
                     <tr class="rates__item rates__item--end">
                         <td class="rates__info">
                             <div class="rates__img">

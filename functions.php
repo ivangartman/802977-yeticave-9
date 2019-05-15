@@ -10,7 +10,7 @@
 function price_format(float $price): string
 {
     $price = ceil($price);
-    $price = number_format($price, 0, '', ' ');
+    $price = number_format($price, 0, '', ' ') . ' р';
 
     return $price;
 }
@@ -29,7 +29,7 @@ function timer($date_end)
     $diff = $midninght - $now;
     $hours = floor($diff / 3600);
     $minutes = floor(($diff % 3600) / 60);
-    $formatDate = $hours.':'.$minutes;
+    $formatDate = $hours . ':' . $minutes;
 
     return $formatDate;
 }
@@ -76,16 +76,19 @@ function endDate($date_end)
  *
  * @return array
  */
-function error($title, $categories, $error_message, $user_name)
+function error($title, $categories, $error_message, $user_name, $pagecat)
 {
     $page_content = include_template('error.php', [
         'error_message' => $error_message,
+        'categories'    => $categories,
+        'pagecat'       => $pagecat
     ]);
     $html = include_template('layout.php', [
         'user_name'  => $user_name,
         'title'      => $title,
         'content'    => $page_content,
         'categories' => $categories,
+        'pagecat'    => $pagecat
     ]);
     echo $html;
     die;
@@ -106,19 +109,45 @@ function date_rate($data)
     foreach ($data as $lot) {
         $time = time() - strtotime($lot['date_add']);
         if ($time < 60) {
-            $lot['date_add'] = $time.get_noun_plural_form($time, ' секунду',' секунды', ' секунд').' назад';
+            $lot['date_add'] = $time . get_noun_plural_form($time, ' секунду',' секунды', ' секунд') . ' назад';
             $lots[] = $lot;
         } elseif ($time < 3600) {
-            $lot['date_add'] = floor($time / 60).get_noun_plural_form(floor($time / 60), ' минуту', ' минуты',' минут').' назад';
+            $lot['date_add'] = floor($time / 60) . get_noun_plural_form(floor($time / 60), ' минуту', ' минуты',' минут') . ' назад';
             $lots[] = $lot;
         } elseif ($time < 86400) {
-            $lot['date_add'] = floor($time / 3600).get_noun_plural_form(floor($time / 3600), ' час', ' часа',' часов').' назад';
+            $lot['date_add'] = floor($time / 3600) . get_noun_plural_form(floor($time / 3600), ' час', ' часа',' часов') . ' назад';
             $lots[] = $lot;
         } else {
-            $lot['date_add'] = floor($time / 86400).get_noun_plural_form(floor($time / 86400), ' день', ' дня',' дней').' назад';
+            $lot['date_add'] = floor($time / 86400) . get_noun_plural_form(floor($time / 86400), ' день', ' дня',' дней') . ' назад';
             $lots[] = $lot;
         }
     }
 
     return $lots;
+}
+
+/**
+ * Определение максимальной ставки лота.
+ *
+ * @param mysqli $link Ресурс соединения
+ * @param int    $page id лота
+ *
+ * @return int
+ */
+function minrate($link, $page)
+{
+
+    foreach (db_price_max($link, $page) as $price) {
+        $price_max = $price['price'];
+        $step_rate = $price['step_rate'];
+    }
+    foreach (db_price($link, $page) as $price_lot) {
+        $price_lot = $price_lot['price'];
+    }
+    if ($price_lot > $price_max) {
+        $price_max = $price_lot;
+    }
+    $min_rate = $price_max + floor(($price_max / 100) * $step_rate);
+
+    return $min_rate;
 }

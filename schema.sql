@@ -35,7 +35,8 @@ CREATE TABLE lots (
   picture_url TEXT,
   price INT(11) NOT NULL,
   date_end DATETIME,
-  step_rate INT(11)
+  step_rate INT(11),
+  winner_id INT(11)
 );
 CREATE INDEX l_name ON lots(name);
 CREATE FULLTEXT INDEX name_content ON lots(name, content);

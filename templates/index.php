@@ -2,10 +2,9 @@
     <h2 class="promo__title">Нужен стафф для катки?</h2>
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
     <ul class="promo__list">
-        <!--заполните этот список из массива категорий-->
         <?php foreach ($categories as $category): ?>
             <li class="promo__item promo__item--<?= $category['code'] ?>">
-                <a class="promo__link" href="pages/all-lots.html"><?= htmlspecialchars($category['name']) ?></a>
+                <a class="promo__link" href="all-lots.php?pagecat=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a>
             </li>
         <?php endforeach ?>
     </ul>
@@ -15,7 +14,6 @@
         <h2>Открытые лоты</h2>
     </div>
     <ul class="lots__list">
-        <!--заполните этот список из массива с товарами-->
         <?php foreach ($lots as $lot): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
@@ -27,7 +25,7 @@
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?= htmlspecialchars(price_format($lot['price'])) ?><b class="rub">р</b></span>
+                            <span class="lot__cost"><?= htmlspecialchars(substr(price_format($lot['price']),0, -2)) ?><b class="rub">р</b></span>
                         </div>
                         <div class="lot__timer timer <?= timer_finishing($lot['date_end']) ? 'timer--finishing' : '' ?>">
                             <?= timer($lot['date_end']) ?>

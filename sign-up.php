@@ -4,7 +4,7 @@ require_once 'init.php';
 
 $categories = db_category_all($link);
 $page_content = include_template('sign-up.php', [
-    'categories' => $categories,
+    'categories' => $categories
 ]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли отправлен запрос "POST"
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
     $error_massage = [
         'password' => 'Введите пароль',
         'name'     => 'Введите имя',
-        'contact'  => 'Напишите как с вами связаться',
+        'contact'  => 'Напишите как с вами связаться'
     ];
     //Валидация пароля, имени, контактов
     foreach ($required as $key) {
@@ -23,13 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
         }
     }
     //Валидация e-mail
-    if (! filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    if (empty($_POST['email'])) {
+        $errors['email'] = 'Введите e-mail';
+    } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'Введите коректный e-mail';
-    }
-
-    //Проверяем есть ли уже такаой e-mail в БД
-    $email = $_POST['email'];
-    if (count(db_user_email($link, $email)) > 0) {
+    } elseif (count(db_user_email($link, $_POST['email'])) > 0) {
         $errors['email'] = 'Пользователь с этим e-mail уже зарегистрирован';
     }
 
@@ -37,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
         $page_content = include_template('sign-up.php', [
             'user'       => $user,
             'errors'     => $errors,
-            'categories' => $categories,
+            'categories' => $categories
         ]);
     } else {
         //Добавление новой записи в таблицу users в MySQL
@@ -47,19 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
             $user['email'],
             $user['password'],
             $user['name'],
-            $user['contact'],
+            $user['contact']
         ];
         $res = db_insert($link, $sql, $data);
         if ($res) {
             header("Location: login.php");
         } else {
             $error_message = 'Новый пользователь не зарегестрирован';
-            $html = error($title, $categories, $error_message, $user_name);
+            $html = error($title, $categories, $error_message, $user_name, $pagecat);
         }
     }
 } else {
     $page_content = include_template('sign-up.php', [
-        'categories' => $categories,
+        'categories' => $categories
     ]);
 }
 
@@ -69,5 +67,6 @@ $html = include_template('layout.php', [
     'content'    => $page_content,
     'categories' => $categories,
     'main_class' => 'class=" "',
+    'pagecat'    => $pagecat
 ]);
 echo $html;

@@ -2,7 +2,7 @@
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>
             <li class="nav__item">
-                <a href="pages/all-lots.html"><?= htmlspecialchars($category['name']) ?></a>
+                <a href="all-lots.php?pagecat=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a>
             </li>
         <?php endforeach ?>
     </ul>
@@ -15,35 +15,36 @@
                 <div class="lot-item__image">
                     <img src="<?= htmlspecialchars($lot['picture_url']) ?>" width="730" height="548" alt="Сноуборд">
                 </div>
-                <p class="lot-item__category">Категория: <span><?= htmlspecialchars($lot['name_cat']) ?></span></p>
+                <p class="lot-item__category">Категория:<span><?= htmlspecialchars($lot['name_cat']) ?></span></p>
                 <p class="lot-item__description"><?= htmlspecialchars($lot['content']) ?></p>
             </div>
 
-            <?php if ($user_name): ?>
             <div class="lot-item__right">
-                <div class="lot-item__state">
-                    <div class="lot-item__timer timer <?= timer_finishing($lot['date_end']) ? 'timer--finishing' : '' ?>">
-                        <?= timer($lot['date_end']) ?>
-                    </div>
-                    <div class="lot-item__cost-state">
-                        <div class="lot-item__rate">
-                            <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost"><?= $lot['price_rate'] ? price_format($lot['price_rate']) : price_format($lot['price_lot']) ?></span>
+                <?php if ($user_name && $date_end == null && $user_id != $lot_userid && $user_id != $rate_userid ): ?>
+                    <div class="lot-item__state">
+                        <div class="lot-item__timer timer <?= timer_finishing($lot['date_end']) ? 'timer--finishing' : '' ?>">
+                            <?= timer($lot['date_end']) ?>
                         </div>
-                        <div class="lot-item__min-cost">
-                            Мин. ставка <span><?= price_format($min_rate) ?></span>
+                        <div class="lot-item__cost-state">
+                            <div class="lot-item__rate">
+                                <span class="lot-item__amount">Текущая цена</span>
+                                <span class="lot-item__cost"><?= $lot['price_rate'] ? price_format($lot['price_rate']) : price_format($lot['price_lot']) ?></span>
+                            </div>
+                            <div class="lot-item__min-cost">
+                                Мин. ставка
+                                <span><?= price_format($min_rate) ?></span>
+                            </div>
                         </div>
+                        <form enctype="multipart/form-data" class="lot-item__form <?= isset($errors) ? 'form--invalid' : '' ?>" action="lot.php" method="post" autocomplete="off">
+                            <p class="lot-item__form-item form__item <?= isset($errors['price']) ? 'form__item--invalid' : '' ?>">
+                                <label for="cost">Ваша ставка</label>
+                                <input id="cost" type="text" name="price" placeholder="<?= price_format($min_rate) ?>" value="<?= isset($rate['price']) ? $rate['price'] : '' ?>">
+                                <span class="form__error"><?= $errors['price'] ?></span>
+                            </p>
+                            <button type="submit" class="button">Сделать ставку</button>
+                        </form>
                     </div>
-                    <form enctype="multipart/form-data" class="lot-item__form <?= isset($errors) ? 'form--invalid' : ''?>" action="lot.php" method="post" autocomplete="off">
-                        <p class="lot-item__form-item form__item <?= isset($errors['price']) ? 'form__item--invalid' : ''?>">
-                            <label for="cost">Ваша ставка</label>
-                            <input id="cost" type="text" name="price" placeholder="<?= price_format($min_rate) ?>" value="<?= isset($rate['price']) ? $rate['price'] : ''?>">
-                            <span class="form__error"><?= $errors['price'] ?></span>
-                        </p>
-                        <button type="submit" class="button">Сделать ставку</button>
-                    </form>
-                </div>
-
+                <?php endif ?>
                 <div class="history">
                     <h3>История ставок (<span><?= $sum ?></span>)</h3>
                     <table class="history__list">
@@ -57,7 +58,6 @@
                     </table>
                 </div>
             </div>
-            <?php endif ?>
         </div>
     <?php endforeach ?>
 </section>

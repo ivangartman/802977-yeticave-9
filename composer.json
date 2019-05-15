@@ -1,0 +1,15 @@
+{
+    "name": "ivan/802977-yeticave-9",
+    "description": "The Internet auction",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Иван Гартман",
+            "email": "senior.gartman@yandex.ru"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": ">=6.2"
+    }
+}

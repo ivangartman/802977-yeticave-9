@@ -5,8 +5,8 @@ require_once 'init.php';
 $categories = db_category_all($link);
 
 if (! $user_name) {
-    $error_message = 'Для доступа к странице необходимо зарегистрироваться';
-    $html = error($title, $categories, $error_message, $user_name);
+    $error_message = 'Для доступа к странице необходимо войти в личный кабинет';
+    $html = error($title, $categories, $error_message, $user_name, $pagecat);
     exit();
 } else {
     $page_content = include_template('add.php', [
@@ -28,16 +28,24 @@ if (! $user_name) {
             }
         }
         //Валидация начальной ставки
-        if ((int)($_POST['price']) === 0) {
+        if (empty($_POST['price'])) {
+            $errors['price'] = 'Введите начальную цену';
+        } elseif ((int)($_POST['price']) === 0) {
             $errors['price'] = 'Введите целое число больше 0';
         }
         //Валидация шага ставки
-        if ((int)($_POST['step_rate']) === 0) {
+        if (empty($_POST['step_rate'])) {
+            $errors['step_rate'] = 'Введите шаг ставки';
+        } elseif ((int)($_POST['step_rate']) === 0) {
             $errors['step_rate'] = 'Введите целое число больше 0';
         }
         //Валидация даты ставки
-        if (! is_date_valid($_POST['date_end'])) {
+        if (empty($_POST['date_end'])) {
+            $errors['date_end'] = 'Введите дату завершения торгов';
+        } elseif (! is_date_valid($_POST['date_end'])) {
             $errors['date_end'] = 'Введите дату в формате ГГГГ-ММ-ДД';
+        } elseif (strtotime($_POST['date_end']) <= (time() + 86400)){
+            $errors['date_end'] = 'Введите дату больше текущей даты, хотя бы на один день';
         }
         //Валидация изображения
         if ($_FILES['lot-img'] ['name']) {
@@ -46,9 +54,9 @@ if (! $user_name) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_type = finfo_file($finfo, $tmp_name);
             if (($file_type === 'image/png') || ($file_type === 'image/jpeg') || ($file_type === 'image/jpg')) {
-                $filename = uniqid().'.'.substr($file_type, 6);
+                $filename = uniqid() . '.' . substr($file_type, 6);
                 $lot['picture_url'] = $filename;
-                move_uploaded_file($_FILES['lot-img'] ['tmp_name'],'uploads/'.$filename);
+                move_uploaded_file($_FILES['lot-img'] ['tmp_name'],'uploads/' . $filename);
             } else {
                 $errors['lot-img'] = 'Загрузите изображение в формате ipg, jpeg, png';
             }
@@ -81,12 +89,12 @@ if (! $user_name) {
                 header("Location: lot.php?page=".$lot_id);
             } else {
                 $error_message = 'Новый лот не добавлен';
-                $html = error($title, $categories, $error_message, $user_name);
+                $html = error($title, $categories, $error_message, $user_name, $pagecat);
             }
         }
     } else {
         $page_content = include_template('add.php', [
-            'categories' => $categories,
+            'categories' => $categories
         ]);
     }
 }
@@ -96,6 +104,7 @@ $html = include_template('layout.php', [
     'title'      => $title,
     'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "'
+    'main_class' => 'class=" "',
+    'pagecat'    => $pagecat
 ]);
 echo $html;

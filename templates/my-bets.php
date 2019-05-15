@@ -2,7 +2,7 @@
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>
             <li class="nav__item">
-                <a href="pages/all-lots.html"><?= htmlspecialchars($category['name']) ?></a>
+                <a href="all-lots.php?pagecat=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a>
             </li>
         <?php endforeach ?>
     </ul>
@@ -12,15 +12,14 @@
     <table class="rates__list">
         <?php foreach ($lots_user as $lot): ?>
             <?php foreach (db_price_max($link, $lot['id']) as $price_max): ?>
-                <?php if ($price_max['user_id'] == $user_id and endDate($lot['date_end'])): ?>
+                <?php if ($price_max['user_id'] == $user_id and endDate($lot['date_end']) ): ?>
                     <tr class="rates__item rates__item--win">
                         <td class="rates__info">
                             <div class="rates__img">
                                 <img src="<?= htmlspecialchars($lot['picture_url']) ?>" width="54" height="40" alt="<?= htmlspecialchars($lot['name_cat']) ?>">
                             </div>
                             <div>
-                                <h3 class="rates__title"><a href="lot.php?page=<?= htmlspecialchars($lot['id']) ?>"><?= htmlspecialchars($lot['name_lot']) ?></a>
-                                </h3>
+                                <h3 class="rates__title"><a href="lot.php?page=<?= htmlspecialchars($lot['id']) ?>"><?= htmlspecialchars($lot['name_lot']) ?></a></h3>
                                 <p><?= htmlspecialchars($lot['contact']) ?></p>
                             </div>
                         </td>
@@ -64,8 +63,7 @@
                             <div class="rates__img">
                                 <img src="<?= htmlspecialchars($lot['picture_url']) ?>" width="54" height="40" alt="Сноуборд">
                             </div>
-                            <h3 class="rates__title"><a href="lot.php?page=<?= htmlspecialchars($lot['id']) ?>"><?= htmlspecialchars($lot['name_lot']) ?></a>
-                            </h3>
+                            <h3 class="rates__title"><a href="lot.php?page=<?= htmlspecialchars($lot['id']) ?>"><?= htmlspecialchars($lot['name_lot']) ?></a></h3>
                         </td>
                         <td class="rates__category">
                             <?= htmlspecialchars($lot['name_cat']) ?>

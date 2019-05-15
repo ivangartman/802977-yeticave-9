@@ -2,7 +2,7 @@
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>
             <li class="nav__item">
-                <a href="pages/all-lots.html"><?= htmlspecialchars($category['name']) ?></a>
+                <a href="all-lots.php?pagecat=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a>
             </li>
         <?php endforeach ?>
     </ul>
@@ -19,8 +19,7 @@
                         </div>
                         <div class="lot__info">
                             <span class="lot__category"><?= htmlspecialchars($lot['name_cat']) ?></span>
-                            <h3 class="lot__title"><a class="text-link" href="lot.php?page=<?= htmlspecialchars($lot['id']) ?>"><?= htmlspecialchars($lot['name_lot']) ?></a>
-                            </h3>
+                            <h3 class="lot__title"><a class="text-link" href="lot.php?page=<?= htmlspecialchars($lot['id']) ?>"><?= htmlspecialchars($lot['name_lot']) ?></a></h3>
                             <div class="lot__state">
                                 <div class="lot__rate">
                                     <span class="lot__amount">Стартовая цена</span>
@@ -42,7 +41,8 @@
         <ul class="pagination-list">
             <li class="pagination-item pagination-item-prev"><a href="search.php?page=<?= ($cur_page - 1 > 0) ? $cur_page - 1 : 1 ?>&search=<?= $search ?>">Назад</a></li>
             <?php foreach ($pages as $page): ?>
-                <li class="pagination-item <?= ($page == $cur_page) ? 'pagination-item-active' : '' ?>"><a href="search.php?page=<?= $page ?>&search=<?= $search ?>"><?= $page ?></a></li>
+                <li class="pagination-item <?= ($page == $cur_page) ? 'pagination-item-active' : '' ?>"><a href="search.php?page=<?= $page ?>&search=<?= $search ?>"><?= $page ?></a>
+                </li>
             <?php endforeach ?>
             <li class="pagination-item pagination-item-next"><a href="search.php?page=<?= ($cur_page + 1 < $pages_count) ? $cur_page + 1 : $pages_count ?>&search=<?= $search ?>">Вперед</a>
             </li>

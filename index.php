@@ -7,7 +7,7 @@ $lots = db_lots_all($link);
 
 $page_content = include_template('index.php', [
     'categories' => $categories,
-    'lots'       => $lots,
+    'lots'       => $lots
 ]);
 $html = include_template('layout.php', [
     'user_name'  => $user_name,
@@ -15,5 +15,6 @@ $html = include_template('layout.php', [
     'content'    => $page_content,
     'categories' => $categories,
     'main_class' => 'class="container"',
+    'pagecat'    => $pagecat
 ]);
 echo $html;

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'init.php';
+require_once 'include/init.php';
 
 $categories = db_category_all($link);
 if (isset($_GET['pagecat'])) {
@@ -9,7 +9,7 @@ if (isset($_GET['pagecat'])) {
 $lots = db_lotscat($link, $pagecat);
 if (!$lots) {
     $error_message = 'В данной категории отсутствуют лоты';
-    $html = error($title, $categories, $error_message, $user_name, $pagecat);
+    $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
 } else {
     foreach ($lots as $key) {
         $catname = $key['name_cat'];
@@ -38,7 +38,8 @@ $html = include_template('layout.php', [
     'title'      => $title,
     'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "',
-    'pagecat'    => $pagecat
+    'main_class' => $main_class,
+    'pagecat'    => $pagecat,
+    'search'    => $search
 ]);
 echo $html;

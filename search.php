@@ -1,8 +1,9 @@
 <?php
 
-require_once 'init.php';
-
-$search = trim($_GET['search'] ?? '');
+require_once 'include/init.php';
+$pages = '';
+$pages_count = '';
+$cur_page = '';
 if ($search) {
     $lots = db_lots_search($link, $search);
 
@@ -31,7 +32,7 @@ $html = include_template('layout.php', [
     'title'      => $title,
     'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "',
+    'main_class' => $main_class,
     'search'     => $search,
     'pagecat'    => $pagecat
 ]);

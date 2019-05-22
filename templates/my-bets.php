@@ -1,3 +1,15 @@
+<?php
+
+/**
+ *
+ * @var array  $categories  Категории лотов
+ * @var array  $lots_user   Содержание лота
+ * @var int    $price_max   ID пользователя сделавшего максимальную ставку
+ * @var int    $user_id     ID пользователя
+ *
+ */
+?>
+
 <nav class="nav">
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>

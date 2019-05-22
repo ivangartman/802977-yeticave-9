@@ -1,3 +1,23 @@
+<?php
+
+/**
+ *
+ * @var array  $categories  Категории лотов
+ * @var array  $errors      Ошибки валидации
+ * @var array  $lots        Содержание лота
+ * @var string $user_name   Имя пользователя
+ * @var int    $date_end    Дата окончания лота
+ * @var int    $user_id     ID пользователя
+ * @var int    $lot_userid  ID пользователя создавшего лот
+ * @var int    $rate_userid ID пользователя сделавшего ставку
+ * @var int    $min_rate    Минимальная ставка лота
+ * @var int    $rate        Текущая ставка лота
+ * @var int    $sum         Количество ставок
+ * @var array  $rates       Данные по ставке
+ *
+ */
+?>
+
 <nav class="nav">
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>

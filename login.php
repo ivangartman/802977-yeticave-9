@@ -1,6 +1,6 @@
 <?php
 
-require_once 'init.php';
+require_once 'include/init.php';
 
 $categories = db_category_all($link);
 
@@ -8,7 +8,7 @@ $page_content = include_template('login.php', [
     'categories' => $categories
 ]);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли отправлен запрос "POST"
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $login = $_POST;
     $errors = [];
 
@@ -54,6 +54,7 @@ $html = include_template('layout.php', [
     'content'    => $page_content,
     'categories' => $categories,
     'main_class' => $main_class,
-    'pagecat'    => $pagecat
+    'pagecat'    => $pagecat,
+    'search'    => $search
 ]);
 echo $html;

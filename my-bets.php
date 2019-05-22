@@ -1,11 +1,11 @@
 <?php
 
-require_once 'init.php';
+require_once 'include/init.php';
 
 $categories = db_category_all($link);
 if (!$user_name) {
     $error_message = 'Для доступа к странице необходимо войти в личный кабинет';
-    $html = error($title, $categories, $error_message, $user_name, $pagecat);
+    $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
     exit();
 } else {
     $lots = db_lots_all($link);
@@ -17,7 +17,7 @@ if (!$user_name) {
 
     if (!$lots_user) {
         $error_message = 'У вас нет ставок. Сделайте ставку';
-        $html = error($title, $categories, $error_message, $user_name, $pagecat);
+        $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
     } else {
         $lots_user = date_rate($lots_user);
 
@@ -34,7 +34,8 @@ $html = include_template('layout.php', [
     'title'      => $title,
     'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "',
-    'pagecat'    => $pagecat
+    'main_class' => $main_class,
+    'pagecat'    => $pagecat,
+    'search'    => $search
 ]);
 echo $html;

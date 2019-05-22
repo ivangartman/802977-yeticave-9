@@ -1,9 +1,22 @@
+<?php
+
+/**
+ *
+ * @var array  $categories  Категории лотов
+ * @var array  $lot         Содержание лота
+ * @var int    $pagecat     ID категории
+ * @var string $catname     Название категории
+ * @var int    $pages_count Количество страниц плагинации
+ * @var int    $cur_page    Текущая страница плагинации
+ * @var array  $pages       Текущая страница плагинации
+ *
+ */
+?>
+
 <nav class="nav">
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>
-            <li class="nav__item <?= ($pagecat
-                === htmlspecialchars($category['id'])) ? ' nav__item--current'
-                : '' ?>">
+            <li class="nav__item <?= ($pagecat === htmlspecialchars($category['id'])) ? ' nav__item--current' : '' ?>">
                 <a href="all-lots.php?pagecat=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a>
             </li>
         <?php endforeach ?>

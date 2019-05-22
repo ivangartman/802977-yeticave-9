@@ -1,3 +1,14 @@
+<?php
+
+/**
+ *
+ * @var array $categories Категории лотов
+ * @var array $errors     Ошибки валидации
+ * @var array $user       Данные пользователя
+ *
+ */
+?>
+
 <nav class="nav">
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>
@@ -31,5 +42,5 @@
     </div>
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <button type="submit" class="button">Зарегистрироваться</button>
-    <a class="text-link" href="#">Уже есть аккаунт</a>
+    <a class="text-link" href="login.php">Уже есть аккаунт</a>
 </form>

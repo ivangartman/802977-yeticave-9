@@ -1,3 +1,17 @@
+<?php
+
+/**
+ *
+ * @var array  $categories  Категории лотов
+ * @var array  $lots        Содержание лота
+ * @var string $search      Ключевой параметр поиска
+ * @var int    $pages_count Количество страниц плагинации
+ * @var int    $cur_page    Текущая страница плагинации
+ * @var array  $pages       Текущая страница плагинации
+ *
+ */
+?>
+
 <nav class="nav">
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>

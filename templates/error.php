@@ -1,3 +1,14 @@
+<?php
+
+/**
+ *
+ * @var array  $categories    Категории лотов
+ * @var int    $pagecat       ID категории
+ * @var string $error_message Сообщение об ошибке
+ *
+ */
+?>
+
 <nav class="nav">
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>

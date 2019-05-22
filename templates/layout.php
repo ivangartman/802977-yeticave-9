@@ -1,3 +1,17 @@
+<?php
+
+/**
+ *
+ * @var array  $categories Категории лотов
+ * @var int    $pagecat    ID категории
+ * @var string $title      Название страницы
+ * @var string $user_name  Имя пользователя
+ * @var string $main_class Класс контейнера контента
+ * @var string $content    Контент страницы
+ *
+ */
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -41,7 +55,7 @@
             </nav>
         </div>
     </header>
-    <main <?= $main_class ?>>
+    <main class="<?= $main_class ?>">
         <?= $content ?>
     </main>
 </div>
@@ -50,7 +64,7 @@
     <nav class="nav">
         <ul class="nav__list container">
             <?php foreach ($categories as $category): ?>
-                <li class="nav__item <?= ($pagecat === htmlspecialchars($category['id'])) ? ' nav__item--current' : '' ?>">
+                <li class="nav__item <?= ($pagecat === htmlspecialchars($category['id'])) ? 'nav__item--current' : '' ?>">
                     <a href="all-lots.php?pagecat=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a>
                 </li>
             <?php endforeach ?>

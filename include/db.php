@@ -8,9 +8,9 @@ if (!$link) {
 }
 
 /**
- * Получение всех категорий из таблицы category.
+ * Получение всех категорий.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  *
  * @return array
  */
@@ -25,7 +25,7 @@ function db_category_all($link)
 /**
  * Получение содержимого лотов.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  *
  * @return array
  */
@@ -41,9 +41,9 @@ function db_lots_all($link)
 }
 
 /**
- * Получение id лотов по отправленнному запросу "page".
+ * Получение id лотов.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  * @param int    $page id лота
  *
  * @return array
@@ -57,9 +57,9 @@ function db_lots_id($link, $page)
 }
 
 /**
- * Получение содержимого лотов по отправленному id.
+ * Получение содержимого лотов.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  * @param int    $page id лота
  *
  * @return array
@@ -77,9 +77,9 @@ function db_lots_allid($link, $page)
 }
 
 /**
- * Получение переченя ставок по id лота.
+ * Получение переченя ставок.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  * @param int    $page id лота
  *
  * @return array
@@ -98,7 +98,7 @@ function db_rate_id($link, $page)
 /**
  * Получение записей с таблиц в MySQL.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  * @param string $sql  SQL запрос с плейсхолдерами вместо значений
  * @param array  $data Данные для вставки на место плейсхолдеров
  *
@@ -117,14 +117,14 @@ function db_fetch_data($link, $sql, $data = [])
     return $result;
 }
 
-//---Добавление новой записи в таблицу lots---
+//Добавление нового лота
 $db_add_lot = "INSERT INTO lots (user_id, category_id, name, content, picture_url, price, date_end, step_rate)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 /**
- * Добавление новой записи в таблицу lots в MySQL.
+ * Добавление нового лота.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  * @param string $sql  SQL запрос с плейсхолдерами вместо значений
  * @param array  $data Данные для вставки на место плейсхолдеров
  *
@@ -142,7 +142,7 @@ function db_insert($link, $sql, $data)
 /**
  * Проверяем есть ли уже такой e-mail в БД.
  *
- * @param mysqli $link  Ресурс соединения
+ * @param string $link  Ресурс соединения
  * @param string $email E-mail пользователя
  *
  * @return array
@@ -155,14 +155,14 @@ function db_user_email($link, $email)
     return $user_email;
 }
 
-//---Добавление новой записи в таблицу users---
+//Добавление нового пользователя
 $db_add_user = "INSERT INTO users (email, password, name, contact) 
                 VALUES (?, ?, ?, ?)";
 
 /**
- * Получение переченя ставок по id лота.
+ * Получение переченя ставок.
  *
- * @param mysqli $link  Ресурс соединения
+ * @param string $link  Ресурс соединения
  * @param string $email E-mail пользователя
  *
  * @return array
@@ -176,21 +176,21 @@ function db_email($link, $email)
     return $user;
 }
 
-//Добавление новой ставки в таблицу rates
+//Добавление новой ставки
 $db_add_rate = "INSERT INTO rates (user_id, lot_id, price)
                 VALUES (?, ?, ?)";
 
 /**
  * Получение максимальной ставки.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  * @param int    $page id лота
  *
  * @return array
  */
 function db_price_max($link, $page)
 {
-    $sql = "SELECT r.price, r.user_id, l.step_rate FROM rates r
+    $sql = "SELECT r.price, r.user_id FROM rates r
             JOIN lots l ON r.lot_id = l.id
             WHERE r.lot_id = $page
             ORDER BY r.price DESC LIMIT 1";
@@ -202,23 +202,23 @@ function db_price_max($link, $page)
 /**
  * Получение стоимости лота.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  * @param int    $page id лота
  *
  * @return array
  */
 function db_price($link, $page)
 {
-    $sql = "SELECT price FROM lots WHERE id = $page";
+    $sql = "SELECT price, step_rate FROM lots WHERE id = $page";
     $price = db_fetch_data($link, $sql);
 
     return $price;
 }
 
 /**
- * Получение переченя лотов пользователя по id лота.
+ * Получение переченя лотов пользователя.
  *
- * @param mysqli $link    Ресурс соединения
+ * @param string $link    Ресурс соединения
  * @param int    $user_id id пользователя
  *
  * @return array
@@ -239,7 +239,7 @@ function db_lots($link, $user_id)
 /**
  * Полнотекстовый поиск по наименованию и описанию лота.
  *
- * @param mysqli $link   Ресурс соединения
+ * @param string $link   Ресурс соединения
  * @param string $search Выражение по которому идёт поиск
  *
  * @return array
@@ -257,7 +257,7 @@ function db_lots_search($link, $search)
 /**
  * Полнотекстовый поиск по наименованию и описанию лота + плагинация.
  *
- * @param mysqli $link       Ресурс соединения
+ * @param string $link       Ресурс соединения
  * @param string $search     Выражение по которому идёт поиск
  * @param int    $page_items Количество выводимых записей
  * @param int    $offset     Смещение выборки
@@ -278,7 +278,7 @@ function db_lots_search_page($link, $search, $page_items, $offset)
 /**
  * Получение закрытых лотов без победителей.
  *
- * @param mysqli $link Ресурс соединения
+ * @param string $link Ресурс соединения
  *
  * @return array
  */
@@ -294,7 +294,7 @@ function db_endDate_lot($link)
 /**
  * Поиск победителя.
  *
- * @param mysqli $link   Ресурс соединения
+ * @param string $link   Ресурс соединения
  * @param int    $lot_id id закрытого лота
  *
  * @return array
@@ -316,7 +316,7 @@ $db_add_winner = "UPDATE lots SET winner_id = (?) WHERE id = (?)";
 /**
  * Получение содержимого лотов.
  *
- * @param mysqli $link    Ресурс соединения
+ * @param string $link    Ресурс соединения
  * @param int    $pagecat id категории
  *
  * @return array
@@ -335,7 +335,7 @@ function db_lotscat($link, $pagecat)
 /**
  * Полнотекстовый поиск по наименованию и описанию лота + плагинация.
  *
- * @param mysqli $link       Ресурс соединения
+ * @param string $link       Ресурс соединения
  * @param string $pagecat    id активного лота
  * @param int    $page_items Количество выводимых записей
  * @param int    $offset     Смещение выборки

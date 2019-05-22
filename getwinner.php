@@ -1,6 +1,6 @@
 <?php
 
-require_once 'init.php';
+require_once 'include/init.php';
 
 $endDate_lot = db_endDate_lot($link);
 if ($endDate_lot) {
@@ -15,7 +15,7 @@ if ($endDate_lot) {
             $res = db_insert($link, $sql, $data);
             if ( ! $res) {
                 $error_message = 'Победитель не добавлен';
-                $html = error($title, $categories, $error_message, $user_name, $pagecat);
+                $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
             }
             $transport = new Swift_SmtpTransport('phpdemo.ru', 25);
             $transport->setUsername('keks@phpdemo.ru');

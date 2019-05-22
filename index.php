@@ -1,6 +1,6 @@
 <?php
 
-require_once 'init.php';
+require_once 'include/init.php';
 
 $categories = db_category_all($link);
 $lots = db_lots_all($link);
@@ -14,7 +14,8 @@ $html = include_template('layout.php', [
     'title'      => $title,
     'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class="container"',
-    'pagecat'    => $pagecat
+    'main_class' => 'container',
+    'pagecat'    => $pagecat,
+    'search'    => $search
 ]);
 echo $html;

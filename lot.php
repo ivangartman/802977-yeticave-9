@@ -1,15 +1,13 @@
 <?php
 
-require_once 'init.php';
+require_once 'include/init.php';
 
-//Получение всех категорий
 $categories = db_category_all($link);
-
-//Проверяем был ли отправлен запрос "page"
+$rate = '';
+$errors = '';
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
     $_SESSION['page'] = $page;
-    $min_rate = minrate($link, $page);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $page = $_SESSION['page'];
     $rate = $_POST;
@@ -18,7 +16,6 @@ if (isset($_GET['page'])) {
     $errors = [];
 
     $min_rate = minrate($link, $page);
-
     if (empty($_POST['price'])) {
         $errors['price'] = 'Сделайте ставку';
     } elseif ((int)($_POST['price']) === 0) {
@@ -38,20 +35,21 @@ if (isset($_GET['page'])) {
         $res = db_insert($link, $sql, $data);
         if (! $res) {
             $error_message = 'Ставка не добавлена';
-            $html = error($title, $categories, $error_message, $user_name, $pagecat);
+            $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
         }
     }
 } else {
     $error_message = 'Данной страницы не существует на сайте';
-    $html = error($title, $categories, $error_message, $user_name, $pagecat);
+    $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
 }
 
 //Получение id лотов по отправленнному запросу "page"
 $id = db_lots_id($link, $page);
 if (! $id) {
     $error_message = 'Данной страницы не существует на сайте';
-    $html = error($title, $categories, $error_message, $user_name, $pagecat);
+    $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
 } else {
+    $min_rate = minrate($link, $page);
     //Получение содержимого лота по отправленному id
     $lots = db_lots_allid($link, $page);
     $date_end = NULL;
@@ -81,7 +79,6 @@ if (! $id) {
         'user_id'    => $user_id,
         'lot_userid' => $lot_userid,
         'rate_userid' => $rate_userid
-
     ]);
 }
 
@@ -90,7 +87,8 @@ $html = include_template('layout.php', [
     'title'      => $title,
     'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "',
-    'pagecat'    => $pagecat
+    'main_class' => $main_class,
+    'pagecat'    => $pagecat,
+    'search'    => $search
 ]);
 echo $html;

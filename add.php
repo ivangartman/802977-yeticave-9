@@ -1,18 +1,18 @@
 <?php
 
-require_once 'init.php';
+require_once 'include/init.php';
 
 $categories = db_category_all($link);
 
 if (! $user_name) {
     $error_message = 'Для доступа к странице необходимо войти в личный кабинет';
-    $html = error($title, $categories, $error_message, $user_name, $pagecat);
+    $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
     exit();
 } else {
     $page_content = include_template('add.php', [
         'categories' => $categories
     ]);
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли отправлен запрос "POST"
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $lot = $_POST;
         $required = ['name', 'category_id', 'content'];
         $errors = [];
@@ -89,7 +89,7 @@ if (! $user_name) {
                 header("Location: lot.php?page=".$lot_id);
             } else {
                 $error_message = 'Новый лот не добавлен';
-                $html = error($title, $categories, $error_message, $user_name, $pagecat);
+                $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
             }
         }
     } else {
@@ -104,7 +104,8 @@ $html = include_template('layout.php', [
     'title'      => $title,
     'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "',
-    'pagecat'    => $pagecat
+    'main_class' => $main_class,
+    'pagecat'    => $pagecat,
+    'search'    => $search
 ]);
 echo $html;

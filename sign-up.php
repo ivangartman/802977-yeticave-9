@@ -1,13 +1,13 @@
 <?php
 
-require_once 'init.php';
+require_once 'include/init.php';
 
 $categories = db_category_all($link);
 $page_content = include_template('sign-up.php', [
     'categories' => $categories
 ]);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли отправлен запрос "POST"
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST;
     $required = ['name', 'password', 'contact'];
     $errors = [];
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {//Проверяем был ли о�
             header("Location: login.php");
         } else {
             $error_message = 'Новый пользователь не зарегестрирован';
-            $html = error($title, $categories, $error_message, $user_name, $pagecat);
+            $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
         }
     }
 } else {
@@ -66,7 +66,8 @@ $html = include_template('layout.php', [
     'title'      => $title,
     'content'    => $page_content,
     'categories' => $categories,
-    'main_class' => 'class=" "',
-    'pagecat'    => $pagecat
+    'main_class' => $main_class,
+    'pagecat'    => $pagecat,
+    'search'    => $search
 ]);
 echo $html;

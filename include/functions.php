@@ -74,9 +74,9 @@ function endDate($date_end)
  * @param string $categories    Название категории
  * @param string $error_message Текст сообщения об ощибке
  *
- * @return array
+ * @return string
  */
-function error($title, $categories, $error_message, $user_name, $pagecat)
+function error($title, $categories, $error_message, $user_name, $pagecat, $search)
 {
     $page_content = include_template('error.php', [
         'error_message' => $error_message,
@@ -88,7 +88,8 @@ function error($title, $categories, $error_message, $user_name, $pagecat)
         'title'      => $title,
         'content'    => $page_content,
         'categories' => $categories,
-        'pagecat'    => $pagecat
+        'pagecat'    => $pagecat,
+        'search'     => $search
     ]);
     echo $html;
     die;
@@ -136,13 +137,15 @@ function date_rate($data)
  */
 function minrate($link, $page)
 {
-
+    $price_max = '';
     foreach (db_price_max($link, $page) as $price) {
-        $price_max = $price['price'];
-        $step_rate = $price['step_rate'];
+        if (isset($price['price'])) {
+            $price_max = $price['price'];
+        }
     }
-    foreach (db_price($link, $page) as $price_lot) {
-        $price_lot = $price_lot['price'];
+    foreach (db_price($link, $page) as $price_lots) {
+        $price_lot = $price_lots['price'];
+        $step_rate = $price_lots['step_rate'];
     }
     if ($price_lot > $price_max) {
         $price_max = $price_lot;

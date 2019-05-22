@@ -1,3 +1,14 @@
+<?php
+
+/**
+ *
+ * @var array $categories Категории лотов
+ * @var array $errors     Ошибки валидации
+ * @var array $lot        Содержание лота
+ *
+ */
+?>
+
 <nav class="nav">
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>

@@ -155,6 +155,22 @@ function db_user_email($link, $email)
     return $user_email;
 }
 
+/**
+ * Проверяем существуетвование категории в БД.
+ *
+ * @param string $link  Ресурс соединения
+ * @param string $category_id ID категории
+ *
+ * @return array
+ */
+function db_category_id($link, $category_id)
+{
+    $sql = "SELECT id FROM category WHERE id = '$category_id'";
+    $category_id = db_fetch_data($link, $sql);
+
+    return $category_id;
+}
+
 //Добавление нового пользователя
 $db_add_user = "INSERT INTO users (email, password, name, contact) 
                 VALUES (?, ?, ?, ?)";
@@ -248,7 +264,7 @@ function db_lots_search($link, $search)
 {
     $sql = "SELECT cat.name AS name_cat, l.name AS name_lot, l.id, l.price, l.picture_url, l.date_end FROM lots l
             JOIN category cat ON l.category_id = cat.id
-            WHERE MATCH(l.name, l.content) AGAINST('$search*' IN BOOLEAN MODE)";
+            WHERE MATCH(l.name, l.content) AGAINST('$search*' IN BOOLEAN MODE) and l.date_end >= NOW()";
     $db_lots_search = db_fetch_data($link, $sql);
 
     return $db_lots_search;
@@ -268,7 +284,7 @@ function db_lots_search_page($link, $search, $page_items, $offset)
 {
     $sql = "SELECT cat.name AS name_cat, l.name AS name_lot, l.id, l.price, l.picture_url, l.date_end FROM lots l
             JOIN category cat ON l.category_id = cat.id
-            WHERE MATCH(l.name, l.content) AGAINST('$search*' IN BOOLEAN MODE)
+            WHERE MATCH(l.name, l.content) AGAINST('$search*' IN BOOLEAN MODE) and l.date_end >= NOW() 
             ORDER BY l.id DESC LIMIT $page_items OFFSET $offset";
     $db_lots_search_page = db_fetch_data($link, $sql);
 

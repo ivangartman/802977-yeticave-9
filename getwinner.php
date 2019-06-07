@@ -35,7 +35,8 @@ if ($endDate_lot) {
                 [
                     'user_name' => $user['name'],
                     'lot_link'  => 'http://802977-yeticave-9/lot.php?page=' . $lot['id'],
-                    'lot_name'  => $lot['name']
+                    'lot_name'  => $lot['name'],
+                    'my_bets'   => 'http://802977-yeticave-9/my-bets.php'
                 ]);
             $message->setBody($msg_content, 'text/html');
             $mailer->send($message);

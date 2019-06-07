@@ -10,7 +10,7 @@ CREATE TABLE users (
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   email CHAR(60) NOT NULL UNIQUE,
   name CHAR(60) NOT NULL,
-  password CHAR(60) NOT NULL UNIQUE,
+  password CHAR(20) NOT NULL UNIQUE,
   avatar CHAR(120),
   contact CHAR(120)
 );
@@ -31,7 +31,7 @@ CREATE TABLE lots (
   category_id INT(11) NOT NULL,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   name CHAR(120) NOT NULL,
-  content TEXT,
+  content TEXT(500),
   picture_url TEXT,
   price INT(11) NOT NULL,
   date_end DATETIME,

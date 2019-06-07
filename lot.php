@@ -6,24 +6,44 @@ $categories = db_category_all($link);
 $rate = '';
 $errors = '';
 if (isset($_GET['page'])) {
-    $page = $_GET['page'];
+    $page = (int)$_GET['page'];
     $_SESSION['page'] = $page;
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $page = $_SESSION['page'];
     $rate = $_POST;
-    $rate['user_id'] = $_SESSION['user']['id'];
+    $rate['user_id'] = $user_id;
     $rate['lot_id'] = $page;
     $errors = [];
 
+    $lots = db_lots_allid($link, $page);
+    $date_end = NULL;
+    foreach ($lots as $lot) {
+        $title = $lot['name_lot'];
+        if (strtotime($lot['date_end']) < time()) {
+            $date_end = ' ';
+        }
+        $lot_userid =  $lot['user_id'];
+        $rate_userid = $lot['rate_userid'];
+    }
     $min_rate = minrate($link, $page);
+    //Валидация ставки
     if (empty($_POST['price'])) {
         $errors['price'] = 'Сделайте ставку';
-    } elseif ((int)($_POST['price']) === 0) {
-        $errors['price'] = 'Введите целое число';
+    } elseif (! filter_var($_POST['price'], FILTER_VALIDATE_INT)){
+        $errors['price'] = 'Введите целое число больше 0';
     } elseif ($_POST['price'] < $min_rate) {
         $errors['price'] = 'Сделайте ставку не меньше '.price_format($min_rate);
+    } elseif (! $user_name) {
+        $errors['price'] = 'Вы не зарегестрированны';
+    } elseif (count(db_lots_id($link, $rate['lot_id'])) === 0) {
+        $errors['price'] = 'Такого лота не существует';
+    } elseif ($user_id == $lot_userid) {
+        $errors['price'] = 'Вы неможите сделать ставку у собственного лота';
+    } elseif ($date_end) {
+        $errors['price'] = 'Дата публикации лота истекла';
+    } elseif ($user_id == $rate_userid) {
+        $errors['price'] = 'Нельзя делать 2 ставки подряд';
     }
-
     if (! count($errors)) {
         //---Добавление новой записи в таблицу lots в MySQL---
         $sql = $db_add_rate;
@@ -60,6 +80,10 @@ if (! $id) {
         }
         $lot_userid =  $lot['user_id'];
         $rate_userid = $lot['rate_userid'];
+    }
+    if (strtotime($lot['date_end']) < time()) {
+        $error_message = 'Данной страницы не существует на сайте';
+        $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
     }
     //Получение переченя ставок по id лота
     $rates = db_rate_id($link, $page);

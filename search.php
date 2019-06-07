@@ -7,7 +7,15 @@ $cur_page = '';
 if ($search) {
     $lots = db_lots_search($link, $search);
 
-    $cur_page = $_GET['page'] ?? 1;
+    if (isset($_GET['page'])) {
+        if ((int)$_GET['page'] != 0) {
+            $cur_page = $_GET['page'];
+        } else {
+            $cur_page = 1;
+        }
+    } else {
+        $cur_page = 1;
+    }
     $page_items = 9;
     $cnt = count($lots);
     $pages_count = ceil($cnt / $page_items);

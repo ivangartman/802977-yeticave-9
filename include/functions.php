@@ -91,10 +91,11 @@ function error($title, $categories, $error_message, $user_name, $pagecat, $searc
         'pagecat'    => $pagecat,
         'search'     => $search
     ]);
+    http_response_code(404);
     echo $html;
+
     die;
 
-    return $html;
 }
 
 /**

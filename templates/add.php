@@ -45,8 +45,8 @@
     <div class="form__item form__item--file <?= isset($errors['lot-img']) ? 'form__item--invalid' : '' ?>">
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file">
-            <input class="visually-hidden" type="file" name="lot-img" id="lot-img" value="">
-            <label for="lot-img">
+            <input class="visually-hidden" type="file" name="lot-img" id="lot-imgg" value="">
+            <label for="lot-imgg">
                 Добавить
             </label>
             <span class="form__error"><?= $errors['lot-img'] ?></span>
@@ -65,7 +65,7 @@
         </div>
         <div class="form__item <?= isset($errors['date_end']) ? 'form__item--invalid' : '' ?>">
             <label for="lot-dat">Дата окончания торгов <sup>*</sup></label>
-            <input class="form__input-date" id="lot-dat" type="text" name="date_end" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= isset($lot['date_end']) ? $lot['date_end'] : '' ?>">
+            <input class="form__input-date" id="lot-dat" type="date" name="date_end" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= isset($lot['date_end']) ? $lot['date_end'] : '' ?>">
             <span class="form__error"><?= $errors['date_end'] ?></span>
         </div>
     </div>

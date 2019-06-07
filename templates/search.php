@@ -53,12 +53,12 @@
     </section>
     <?php if ($pages_count > 1): ?>
         <ul class="pagination-list">
-            <li class="pagination-item pagination-item-prev"><a href="search.php?page=<?= ($cur_page - 1 > 0) ? $cur_page - 1 : 1 ?>&search=<?= $search ?>">Назад</a></li>
+            <li class="pagination-item pagination-item-prev <?= ($cur_page == 1) ? 'pagination-item-disabled' : '' ?>"><a href="search.php?page=<?= ($cur_page - 1 > 0) ? $cur_page - 1 : 1 ?>&search=<?= $search ?>">Назад</a></li>
             <?php foreach ($pages as $page): ?>
                 <li class="pagination-item <?= ($page == $cur_page) ? 'pagination-item-active' : '' ?>"><a href="search.php?page=<?= $page ?>&search=<?= $search ?>"><?= $page ?></a>
                 </li>
             <?php endforeach ?>
-            <li class="pagination-item pagination-item-next"><a href="search.php?page=<?= ($cur_page + 1 < $pages_count) ? $cur_page + 1 : $pages_count ?>&search=<?= $search ?>">Вперед</a>
+            <li class="pagination-item pagination-item-next <?= ($cur_page == $pages_count) ? 'pagination-item-disabled' : '' ?>"><a href="search.php?page=<?= ($cur_page + 1 < $pages_count) ? $cur_page + 1 : $pages_count ?>&search=<?= $search ?>">Вперед</a>
             </li>
         </ul>
     <?php endif ?>

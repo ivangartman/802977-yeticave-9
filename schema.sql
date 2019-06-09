@@ -8,19 +8,19 @@ USE YetiCave;
 CREATE TABLE users (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  email CHAR(60) NOT NULL UNIQUE,
-  name CHAR(60) NOT NULL,
-  password CHAR(20) NOT NULL UNIQUE,
-  avatar CHAR(120),
-  contact CHAR(120)
+  email VARCHAR(120) NOT NULL UNIQUE,
+  name VARCHAR(60) NOT NULL,
+  password VARCHAR(120) NOT NULL,
+  avatar VARCHAR(120),
+  contact VARCHAR(120)
 );
 CREATE INDEX u_name ON users(name);
 
 -- Создаём таблицу, которая содержит категории
 CREATE TABLE category (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
-  name CHAR(120) NOT NULL UNIQUE,
-  code CHAR(60) NOT NULL UNIQUE
+  name VARCHAR(120) NOT NULL,
+  code VARCHAR(60) NOT NULL UNIQUE
 );
 CREATE INDEX c_name ON category(name);
 
@@ -30,7 +30,7 @@ CREATE TABLE lots (
   user_id INT(11) NOT NULL,
   category_id INT(11) NOT NULL,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  name CHAR(120) NOT NULL,
+  name VARCHAR(120) NOT NULL,
   content TEXT(500),
   picture_url TEXT,
   price INT(11) NOT NULL,

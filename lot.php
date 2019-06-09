@@ -5,8 +5,8 @@ require_once 'include/init.php';
 $categories = db_category_all($link);
 $rate = '';
 $errors = '';
-if (isset($_GET['page'])) {
-    $page = (int)$_GET['page'];
+if (isset($_GET['page']) and filter_var(trim($_GET['page']), FILTER_VALIDATE_INT) ) {
+    $page = trim($_GET['page']);
     $_SESSION['page'] = $page;
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $page = $_SESSION['page'];
@@ -14,7 +14,10 @@ if (isset($_GET['page'])) {
     $rate['user_id'] = $user_id;
     $rate['lot_id'] = $page;
     $errors = [];
-
+    if (! filter_var($rate['lot_id'], FILTER_VALIDATE_INT)) {
+        $error_message = 'Данной страницы не существует на сайте';
+        $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
+    }
     $lots = db_lots_allid($link, $page);
     $date_end = NULL;
     foreach ($lots as $lot) {
@@ -26,16 +29,17 @@ if (isset($_GET['page'])) {
         $rate_userid = $lot['rate_userid'];
     }
     $min_rate = minrate($link, $page);
+
     //Валидация ставки
-    if (empty($_POST['price'])) {
+    if (isset($_POST['price']) and empty(trim($_POST['price']))) {
         $errors['price'] = 'Сделайте ставку';
-    } elseif (! filter_var($_POST['price'], FILTER_VALIDATE_INT)){
+    } elseif (! filter_var(trim($_POST['price']), FILTER_VALIDATE_INT)){
         $errors['price'] = 'Введите целое число больше 0';
-    } elseif ($_POST['price'] < $min_rate) {
+    } elseif (trim($_POST['price']) < $min_rate) {
         $errors['price'] = 'Сделайте ставку не меньше '.price_format($min_rate);
-    } elseif (! $user_name) {
+    } elseif (! $user_name and ! $rate['user_id']) {
         $errors['price'] = 'Вы не зарегестрированны';
-    } elseif (count(db_lots_id($link, $rate['lot_id'])) === 0) {
+    } elseif (count(db_lots_id($link, $page)) === 0) {
         $errors['price'] = 'Такого лота не существует';
     } elseif ($user_id == $lot_userid) {
         $errors['price'] = 'Вы неможите сделать ставку у собственного лота';
@@ -43,14 +47,17 @@ if (isset($_GET['page'])) {
         $errors['price'] = 'Дата публикации лота истекла';
     } elseif ($user_id == $rate_userid) {
         $errors['price'] = 'Нельзя делать 2 ставки подряд';
+    } elseif (! filter_var($rate['user_id'], FILTER_VALIDATE_INT)) {
+        $errors['price'] = 'Некоректные данные пользователя';
     }
+
     if (! count($errors)) {
         //---Добавление новой записи в таблицу lots в MySQL---
         $sql = $db_add_rate;
         $data = [
-            $rate['user_id'],
-            $rate['lot_id'],
-            $rate['price']
+            trim($rate['user_id']),
+            trim($rate['lot_id']),
+            trim($rate['price'])
         ];
         $res = db_insert($link, $sql, $data);
         if (! $res) {

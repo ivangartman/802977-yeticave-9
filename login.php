@@ -17,21 +17,21 @@ if ($user_name) {
         $login = $_POST;
         $errors = [];
 
-        if (empty($login['password'])) {
+        if (isset($login['password']) and empty(trim($login['password']))) {
             $errors['password'] = 'Введите пароль';
-        } elseif (mb_strlen($login['password']) > 20) {
+        } elseif (mb_strlen(trim($login['password'])) > 20) {
             $errors['password'] = 'Введите не более 20 символов';
         }
-        if (empty($login['email'])) {
+        if (isset($login['email']) and empty(trim($login['email']))) {
             $errors['email'] = 'Введите e-mail';
-        } elseif (mb_strlen($login['email']) > 60) {
-            $errors['email'] = 'Введите не более 60 символов';
+        } elseif (mb_strlen(trim($login['email'])) > 120) {
+            $errors['email'] = 'Введите не более 120 символов';
         } else {
             //Проверяем есть ли такой E-mail в БД
-            $email = mysqli_real_escape_string($link, $login['email']);
+            $email = mysqli_real_escape_string($link, trim($login['email']));
             $user = db_email($link, $email);
             if ($user) {
-                if (password_verify($login['password'], $user['password'])) {
+                if (password_verify(trim($login['password']), $user['password'])) {
                     $_SESSION['user'] = $user;
                     $user_name = $_SESSION['user']['name'];
                 } else {

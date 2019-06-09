@@ -5,11 +5,12 @@ $pages = '';
 $pages_count = '';
 $cur_page = '';
 if ($search) {
-    $lots = db_lots_search($link, $search);
+    $data = $search . '*';
+    $lots = db_lots_search($link, $data);
 
     if (isset($_GET['page'])) {
-        if ((int)$_GET['page'] != 0) {
-            $cur_page = $_GET['page'];
+        if (filter_var(trim($_GET['page']), FILTER_VALIDATE_INT)) {
+            $cur_page = trim($_GET['page']);
         } else {
             $cur_page = 1;
         }
@@ -21,8 +22,7 @@ if ($search) {
     $pages_count = ceil($cnt / $page_items);
     $offset = ($cur_page - 1) * $page_items;
     $pages = range(1, $pages_count);
-
-    $lots = db_lots_search_page($link, $search, $page_items, $offset);
+    $lots = db_lots_search_page($link, $data, $page_items, $offset);
 }
 
 $categories = db_category_all($link);

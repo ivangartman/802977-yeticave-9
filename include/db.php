@@ -50,8 +50,8 @@ function db_lots_all($link)
  */
 function db_lots_id($link, $page)
 {
-    $sql = "SELECT id FROM lots WHERE id = $page";
-    $db_lots_id = db_fetch_data($link, $sql);
+    $sql = "SELECT id FROM lots WHERE id = ?";
+    $db_lots_id = db_fetch_data($link, $sql, [$page]);
 
     return $db_lots_id;
 }
@@ -69,9 +69,9 @@ function db_lots_allid($link, $page)
     $sql = "SELECT l.name AS name_lot, cat.name AS name_cat, l.user_id, l.content, l.picture_url, l.date_end, r.price AS price_rate, l.price AS price_lot, r.user_id AS rate_userid FROM lots l
             JOIN category cat ON l.category_id = cat.id
             LEFT JOIN rates r ON l.id = r.lot_id
-            WHERE l.id = $page
+            WHERE l.id = ?
             ORDER BY r.price DESC LIMIT 1";
-    $db_lots_allid = db_fetch_data($link, $sql);
+    $db_lots_allid = db_fetch_data($link, $sql, [$page]);
 
     return $db_lots_allid;
 }
@@ -88,9 +88,9 @@ function db_rate_id($link, $page)
 {
     $sql = "SELECT u.name, r.price, r.date_add FROM rates r
             JOIN users u ON r.user_id = u.id
-            WHERE r.lot_id = $page
+            WHERE r.lot_id = ?
             ORDER BY r.id DESC";
-    $db_rate_id = db_fetch_data($link, $sql);
+    $db_rate_id = db_fetch_data($link, $sql, [$page]);
 
     return $db_rate_id;
 }
@@ -149,8 +149,8 @@ function db_insert($link, $sql, $data)
  */
 function db_user_email($link, $email)
 {
-    $sql = "SELECT id FROM users WHERE email = '$email'";
-    $user_email = db_fetch_data($link, $sql);
+    $sql = "SELECT id FROM users WHERE email = ?";
+    $user_email = db_fetch_data($link, $sql, [$email]);
 
     return $user_email;
 }
@@ -165,8 +165,8 @@ function db_user_email($link, $email)
  */
 function db_category_id($link, $category_id)
 {
-    $sql = "SELECT id FROM category WHERE id = '$category_id'";
-    $category_id = db_fetch_data($link, $sql);
+    $sql = "SELECT id FROM category WHERE id = ?";
+    $category_id = db_fetch_data($link, $sql, [$category_id]);
 
     return $category_id;
 }
@@ -208,9 +208,9 @@ function db_price_max($link, $page)
 {
     $sql = "SELECT r.price, r.user_id FROM rates r
             JOIN lots l ON r.lot_id = l.id
-            WHERE r.lot_id = $page
+            WHERE r.lot_id = ?
             ORDER BY r.price DESC LIMIT 1";
-    $price_max = db_fetch_data($link, $sql);
+    $price_max = db_fetch_data($link, $sql, [$page]);
 
     return $price_max;
 }
@@ -225,8 +225,8 @@ function db_price_max($link, $page)
  */
 function db_price($link, $page)
 {
-    $sql = "SELECT price, step_rate FROM lots WHERE id = $page";
-    $price = db_fetch_data($link, $sql);
+    $sql = "SELECT price, step_rate FROM lots WHERE id = ?";
+    $price = db_fetch_data($link, $sql, [$page]);
 
     return $price;
 }
@@ -245,9 +245,9 @@ function db_lots($link, $user_id)
             JOIN lots l ON r.lot_id = l.id 
             JOIN users u ON r.user_id = u.id
             JOIN category cat ON l.category_id = cat.id
-            WHERE r.user_id = $user_id                          
+            WHERE r.user_id = ?                          
             ORDER BY r.id DESC";
-    $db_lots = db_fetch_data($link, $sql);
+    $db_lots = db_fetch_data($link, $sql, [$user_id]);
 
     return $db_lots;
 }
@@ -264,8 +264,8 @@ function db_lots_search($link, $search)
 {
     $sql = "SELECT cat.name AS name_cat, l.name AS name_lot, l.id, l.price, l.picture_url, l.date_end FROM lots l
             JOIN category cat ON l.category_id = cat.id
-            WHERE MATCH(l.name, l.content) AGAINST('$search*' IN BOOLEAN MODE) and l.date_end >= NOW()";
-    $db_lots_search = db_fetch_data($link, $sql);
+            WHERE MATCH(l.name, l.content) AGAINST(? IN BOOLEAN MODE) and l.date_end >= NOW()";
+    $db_lots_search = db_fetch_data($link, $sql, [$search]);
 
     return $db_lots_search;
 }
@@ -284,9 +284,9 @@ function db_lots_search_page($link, $search, $page_items, $offset)
 {
     $sql = "SELECT cat.name AS name_cat, l.name AS name_lot, l.id, l.price, l.picture_url, l.date_end FROM lots l
             JOIN category cat ON l.category_id = cat.id
-            WHERE MATCH(l.name, l.content) AGAINST('$search*' IN BOOLEAN MODE) and l.date_end >= NOW() 
+            WHERE MATCH(l.name, l.content) AGAINST(? IN BOOLEAN MODE) and l.date_end >= NOW() 
             ORDER BY l.id DESC LIMIT $page_items OFFSET $offset";
-    $db_lots_search_page = db_fetch_data($link, $sql);
+    $db_lots_search_page = db_fetch_data($link, $sql, [$search]);
 
     return $db_lots_search_page;
 }
@@ -318,10 +318,10 @@ function db_endDate_lot($link)
 function db_winnerUser($link, $lot_id)
 {
     $sql = "SELECT r.user_id, u.email, u.name FROM rates r
-            JOIN lots l ON r.lot_id = $lot_id
+            JOIN lots l ON r.lot_id = ?
             JOIN users u ON u.id = r.user_id
             ORDER BY r.price DESC LIMIT 1";
-    $winnerUser = db_fetch_data($link, $sql);
+    $winnerUser = db_fetch_data($link, $sql, [$lot_id]);
 
     return $winnerUser;
 }
@@ -341,9 +341,9 @@ function db_lotscat($link, $pagecat)
 {
     $sql = "SELECT l.id, l.name AS name_lot, l.price, l.picture_url, l.date_end, cat.name AS name_cat FROM lots l
             JOIN category cat ON l.category_id = cat.id
-            WHERE cat.id = $pagecat AND l.date_end > NOW()
+            WHERE cat.id = ? AND l.date_end > NOW()
             ORDER BY l.id DESC";
-    $db_lotscat = db_fetch_data($link, $sql);
+    $db_lotscat = db_fetch_data($link, $sql, [$pagecat]);
 
     return $db_lotscat;
 }
@@ -362,9 +362,9 @@ function db_lotscat_page($link, $pagecat, $page_items, $offset)
 {
     $sql = "SELECT l.id, l.name AS name_lot, l.price, l.picture_url, l.date_end, cat.name AS name_cat FROM lots l
             JOIN category cat ON l.category_id = cat.id
-            WHERE cat.id = $pagecat AND l.date_end > NOW()
+            WHERE cat.id = ? AND l.date_end > NOW()
             ORDER BY l.id DESC LIMIT $page_items OFFSET $offset";
-    $db_lotscat_page = db_fetch_data($link, $sql);
+    $db_lotscat_page = db_fetch_data($link, $sql, [$pagecat]);
 
     return $db_lotscat_page;
 }

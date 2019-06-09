@@ -16,41 +16,30 @@ if ($user_name) {
         $user = $_POST;
         $required = ['name', 'password', 'contact'];
         $errors = [];
-        $error_massage = [
-            'password' => 'Введите пароль',
-            'name'     => 'Введите имя',
-            'contact'  => 'Напишите как с вами связаться'
-        ];
-        //Валидация пароля, имени, контактов
-        foreach ($required as $key) {
-            if (empty($_POST[$key])) {
-                $errors[$key] = $error_massage[$key];
-            }
-        }
         //Валидация имени
-        if (empty($_POST['name'])) {
+        if (isset($_POST['name']) and empty(trim($_POST['name']))) {
             $errors['name'] = 'Введите имя';
-        } elseif (mb_strlen($_POST['name']) > 60) {
+        } elseif (mb_strlen(trim($_POST['name'])) > 60) {
             $errors['name'] = 'Введите не более 60 символов';
         }
         //Валидация пароля
-        if (empty($_POST['password'])) {
+        if (isset($_POST['password']) and empty(trim($_POST['password']))) {
             $errors['password'] = 'Введите пароль';
-        } elseif (mb_strlen($_POST['password']) > 20) {
+        } elseif (mb_strlen(trim($_POST['password'])) > 20) {
             $errors['password'] = 'Введите не более 20 символов';
         }
         //Валидация контактных данных
-        if (empty($_POST['contact'])) {
+        if (isset($_POST['contact']) and empty(trim($_POST['contact']))) {
             $errors['contact'] = 'Напишите как с вами связаться';
-        } elseif (mb_strlen($_POST['password']) > 120) {
+        } elseif (mb_strlen(trim($_POST['contact'])) > 120) {
             $errors['contact'] = 'Введите не более 120 символов';
         }
         //Валидация e-mail
-        if (empty($_POST['email'])) {
+        if (isset($_POST['email']) and empty(trim($_POST['email']))) {
             $errors['email'] = 'Введите e-mail';
-        } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        } elseif (!filter_var(trim($_POST['email'], FILTER_VALIDATE_EMAIL))) {
             $errors['email'] = 'Введите коректный e-mail';
-        } elseif (count(db_user_email($link, $_POST['email'])) > 0) {
+        } elseif (count(db_user_email($link, trim($_POST['email']))) > 0) {
             $errors['email'] = 'Пользователь с этим e-mail уже зарегистрирован';
         }
 
@@ -66,10 +55,10 @@ if ($user_name) {
                 PASSWORD_DEFAULT);
             $sql = $db_add_user;
             $data = [
-                $user['email'],
-                $user['password'],
-                $user['name'],
-                $user['contact']
+                trim($user['email']),
+                trim($user['password']),
+                trim($user['name']),
+                trim($user['contact'])
             ];
             $res = db_insert($link, $sql, $data);
             if ($res) {

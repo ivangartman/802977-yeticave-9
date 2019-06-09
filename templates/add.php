@@ -64,8 +64,8 @@
             <span class="form__error"><?= $errors['step_rate'] ?></span>
         </div>
         <div class="form__item <?= isset($errors['date_end']) ? 'form__item--invalid' : '' ?>">
-            <label for="lot-dat">Дата окончания торгов <sup>*</sup></label>
-            <input class="form__input-date" id="lot-dat" type="date" name="date_end" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= isset($lot['date_end']) ? $lot['date_end'] : '' ?>">
+            <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
+            <input class="form__input-date" id="lot-date" type="text" name="date_end" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= isset($lot['date_end']) ? $lot['date_end'] : '' ?>">
             <span class="form__error"><?= $errors['date_end'] ?></span>
         </div>
     </div>

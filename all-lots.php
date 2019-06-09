@@ -3,8 +3,8 @@
 require_once 'include/init.php';
 
 $categories = db_category_all($link);
-if (isset($_GET['pagecat']) and (int)$_GET['pagecat'] != 0 ) {
-    $pagecat = $_GET['pagecat'];
+if (isset($_GET['pagecat']) and filter_var(trim($_GET['pagecat']), FILTER_VALIDATE_INT)) {
+    $pagecat = trim($_GET['pagecat']);
     $lots = db_lotscat($link, $pagecat);
     if (!$lots) {
         $error_message = 'В данной категории отсутствуют лоты';
@@ -14,8 +14,8 @@ if (isset($_GET['pagecat']) and (int)$_GET['pagecat'] != 0 ) {
             $catname = $key['name_cat'];
         }
         if (isset($_GET['page'])) {
-            if ((int)$_GET['page'] != 0) {
-                $cur_page = $_GET['page'];
+            if (filter_var(trim($_GET['page']), FILTER_VALIDATE_INT)) {
+                $cur_page = trim($_GET['page']);
             } else {
                 $cur_page = 1;
             }

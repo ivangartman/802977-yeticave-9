@@ -1,8 +1,8 @@
 -- Создаём БД и производим вход
-CREATE DATABASE YetiCave
+CREATE DATABASE yeticave
   DEFAULT CHARACTER SET utf8
   DEFAULT COLLATE utf8_general_ci;
-USE YetiCave;
+USE yeticave;
 
 -- Создаём таблицу, которая содержит зарегистрированных пользователей
 CREATE TABLE users (

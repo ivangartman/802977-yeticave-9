@@ -70,7 +70,7 @@ function db_lots_allid($link, $page)
             JOIN category cat ON l.category_id = cat.id
             LEFT JOIN rates r ON l.id = r.lot_id
             WHERE l.id = ?
-            ORDER BY r.price DESC LIMIT 1";
+            ORDER BY r.date_add DESC LIMIT 1";
     $db_lots_allid = db_fetch_data($link, $sql, [$page]);
 
     return $db_lots_allid;

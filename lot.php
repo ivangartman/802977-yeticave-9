@@ -9,6 +9,10 @@ if (isset($_GET['page']) and filter_var(trim($_GET['page']), FILTER_VALIDATE_INT
     $page = trim($_GET['page']);
     $_SESSION['page'] = $page;
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (! isset($_SESSION['page'])) {
+        $error_message = 'Данной страницы не существует на сайте';
+        $html = error($title, $categories, $error_message, $user_name, $pagecat, $search);
+    }
     $page = $_SESSION['page'];
     $rate = $_POST;
     $rate['user_id'] = $user_id;
